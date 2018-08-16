@@ -1,0 +1,24 @@
+<idea-plugin>
+    <id>com.niwodai.plugins.pmml.scorecard</id>
+    <name>pmml scorecard plugin</name>
+    <vendor email="wangxin2@niwodai.net" url="http://www.niwodai.com">NiWoDai</vendor>
+
+    <description><![CDATA[
+    pmml scorecard plugin
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="editor.PmmlFileTypeFactory" />
+        <fileEditorProvider implementation="editor.PmmlFileEditorProvider" />
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>
