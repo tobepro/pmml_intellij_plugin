@@ -11,10 +11,6 @@
             <MiningField name="realName" invalidValueTreatment="asMissing"/>
             <MiningField name="score" usageType="predicted"/>
         </MiningSchema>
-        <Output>
-            <OutputField name="reason1" rank="1" feature="reasonCode" dataType="string" optype="categorical"/>
-            <OutputField name="reason2" rank="2" feature="reasonCode" dataType="string" optype="categorical"/>
-        </Output>
         <Characteristics>
             <Characteristic name="ageScore" reasonCode="RC1" baselineScore="0">
                 <Attribute partialScore="10">
