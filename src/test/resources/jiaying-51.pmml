@@ -1,0 +1,227 @@
+<PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3">
+    <Header/>
+    <DataDictionary>
+        <DataField name="channel51ProvinceValue" optype="continuous" dataType="integer"/>
+        <DataField name="ageProvidentVar" optype="continuous" dataType="integer"/>
+        <DataField name="sex" optype="continuous" dataType="integer"/>
+        <DataField name="education" optype="continuous" dataType="integer"/>
+        <DataField name="tripM6Dest51" optype="continuous" dataType="integer">
+            <Interval closure="closedClosed" leftMargin="-1" rightMargin="4" />
+        </DataField>
+        <DataField name="rtEarlyMorning51" optype="continuous" dataType="double" />
+        <DataField name="tm6CvNumOfCall" optype="continuous" dataType="double" />
+        <DataField name="tm6CvAllFee" optype="continuous" dataType="double" />
+        <DataField name="score" optype="continuous" dataType="double"/>
+        <DataField name="province" optype="categorical" dataType="string" />
+    </DataDictionary>
+    <Scorecard modelName="JiaYing51" functionName="regression" initialScore="-2.1486" reasonCodeAlgorithm="pointsAbove">
+        <MiningSchema>
+            <MiningField name="channel51ProvinceValue" invalidValueTreatment="asMissing"/>
+            <MiningField name="ageProvidentVar" invalidValueTreatment="asMissing"/>
+            <MiningField name="sex" invalidValueTreatment="asMissing"/>
+            <MiningField name="education" invalidValueTreatment="asMissing"/>
+            <MiningField name="tripM6Dest51" invalidValueTreatment="asMissing"/>
+            <MiningField name="rtEarlyMorning51" invalidValueTreatment="asMissing"/>
+            <MiningField name="tm6CvNumOfCall" invalidValueTreatment="asMissing"/>
+            <MiningField name="tm6CvAllFee" invalidValueTreatment="asMissing"/>
+            <MiningField name="score" usageType="target"/>
+        </MiningSchema>
+        <Characteristics>
+            <!--省分组离散化值-->
+            <Characteristic name="channel51ProvinceValue" reasonCode="channel51ProvinceValue" baselineScore="0">
+                <Attribute partialScore="0.242754">
+                    <SimplePredicate dataField="channel51ProvinceValue" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.410149">
+                    <SimplePredicate dataField="channel51ProvinceValue" operator="equal" value="1" />
+                </Attribute>
+                <Attribute partialScore="-0.064863">
+                    <SimplePredicate dataField="channel51ProvinceValue" operator="equal" value="2" />
+                </Attribute>
+                <Attribute partialScore="0.177282">
+                    <SimplePredicate dataField="channel51ProvinceValue" operator="equal" value="3" />
+                </Attribute>
+                <Attribute partialScore="0.242754">
+                    <SimplePredicate dataField="channel51ProvinceValue" operator="equal" value="4" />
+                </Attribute>
+            </Characteristic>
+            <!--年龄公积金组合变量值-->
+            <Characteristic name="ageProvidentVar" reasonCode="ageProvidentVar" baselineScore="0">
+                <Attribute partialScore="0.816741">
+                    <SimplePredicate dataField="ageProvidentVar" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.563616">
+                    <SimplePredicate dataField="ageProvidentVar" operator="equal" value="1" />
+                </Attribute>
+                <Attribute partialScore="0.056616">
+                    <SimplePredicate dataField="ageProvidentVar" operator="equal" value="2" />
+                </Attribute>
+                <Attribute partialScore="0.297193">
+                    <SimplePredicate dataField="ageProvidentVar" operator="equal" value="3" />
+                </Attribute>
+                <Attribute partialScore="0.816741">
+                    <SimplePredicate dataField="ageProvidentVar" operator="equal" value="4" />
+                </Attribute>
+            </Characteristic>
+            <!--性别-->
+            <Characteristic name="sex" reasonCode="sex" baselineScore="0">
+                <Attribute partialScore="0.157099">
+                    <SimplePredicate dataField="sex" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.506821">
+                    <SimplePredicate dataField="sex" operator="equal" value="0" />
+                </Attribute>
+                <Attribute partialScore="0.157099">
+                    <SimplePredicate dataField="sex" operator="equal" value="1" />
+                </Attribute>
+            </Characteristic>
+            <!--学历-->
+            <Characteristic name="education" reasonCode="education" baselineScore="0">
+                <Attribute partialScore="0.453133">
+                    <SimplePredicate dataField="education" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="0.105720">
+                    <SimplePredicate dataField="education" operator="equal" value="0" />
+                </Attribute>
+                <Attribute partialScore="0.453133">
+                    <SimplePredicate dataField="education" operator="equal" value="1" />
+                </Attribute>
+                <Attribute partialScore="0.046043">
+                    <SimplePredicate dataField="education" operator="equal" value="2" />
+                </Attribute>
+                <Attribute partialScore="-0.162423">
+                    <SimplePredicate dataField="education" operator="equal" value="3" />
+                </Attribute>
+                <Attribute partialScore="-0.583748">
+                    <SimplePredicate dataField="education" operator="equal" value="4" />
+                </Attribute>
+            </Characteristic>
+            <!--近6个月旅行目的地个数-->
+            <Characteristic name="tripM6Dest51" reasonCode="tripM6Dest51" baselineScore="0">
+                <Attribute partialScore="0.105909">
+                    <SimplePredicate dataField="tripM6Dest51" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="0.021131">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tripM6Dest51" operator="greaterThan" value="-1"/>
+                        <SimplePredicate dataField="tripM6Dest51" operator="lessOrEqual" value="1"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.200861">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tripM6Dest51" operator="greaterThan" value="1"/>
+                        <SimplePredicate dataField="tripM6Dest51" operator="lessOrEqual" value="3"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.299234">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tripM6Dest51" operator="greaterThan" value="3"/>
+                        <SimplePredicate dataField="tripM6Dest51" operator="lessOrEqual" value="4"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-1.023901">
+                    <SimplePredicate dataField="tripM6Dest51" operator="greaterThan" value="4"/>
+                </Attribute>
+            </Characteristic>
+            <!--凌晨通话比例-->
+            <Characteristic name="rtEarlyMorning51" reasonCode="rtEarlyMorning51" baselineScore="0">
+                <Attribute partialScore="0.451592">
+                    <SimplePredicate dataField="rtEarlyMorning51" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.307794">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="greaterThan" value="-0.0011"/>
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="lessOrEqual" value="0.0023"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.072832">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="greaterThan" value="0.0023"/>
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="lessOrEqual" value="0.0239"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.142820">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="greaterThan" value="0.0239"/>
+                        <SimplePredicate dataField="rtEarlyMorning51" operator="lessOrEqual" value="0.0772"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.451592">
+                    <SimplePredicate dataField="rtEarlyMorning51" operator="greaterThan" value="0.0772"/>
+                </Attribute>
+            </Characteristic>
+            <!--近6个月呼叫次数变异系数-->
+            <Characteristic name="tm6CvNumOfCall" reasonCode="tm6CvNumOfCall" baselineScore="0">
+                <Attribute partialScore="0.160177">
+                    <SimplePredicate dataField="tm6CvNumOfCall" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.422923">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="-0.0011"/>
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="lessOrEqual" value="0.0856"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.307055">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="0.0856"/>
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="lessOrEqual" value="0.183"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.152278">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="0.183"/>
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="lessOrEqual" value="0.208"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.007311">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="0.208"/>
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="lessOrEqual" value="0.325"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.452147">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="0.325"/>
+                        <SimplePredicate dataField="tm6CvNumOfCall" operator="lessOrEqual" value="0.74"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.754275">
+                    <SimplePredicate dataField="tm6CvNumOfCall" operator="greaterThan" value="0.74"/>
+                </Attribute>
+            </Characteristic>
+            <!--近6个月话费变异系数-->
+            <Characteristic name="tm6CvAllFee" reasonCode="tm6CvAllFee" baselineScore="0">
+                <Attribute partialScore="0.146888">
+                    <SimplePredicate dataField="tm6CvAllFee" operator="isMissing" />
+                </Attribute>
+                <Attribute partialScore="-0.408193">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvAllFee" operator="greaterThan" value="-0.0011"/>
+                        <SimplePredicate dataField="tm6CvAllFee" operator="lessOrEqual" value="0.0679"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="-0.247353">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvAllFee" operator="greaterThan" value="0.0679"/>
+                        <SimplePredicate dataField="tm6CvAllFee" operator="lessOrEqual" value="0.135"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.028852">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvAllFee" operator="greaterThan" value="0.135"/>
+                        <SimplePredicate dataField="tm6CvAllFee" operator="lessOrEqual" value="0.206"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.151242">
+                    <CompoundPredicate booleanOperator="and">
+                        <SimplePredicate dataField="tm6CvAllFee" operator="greaterThan" value="0.206"/>
+                        <SimplePredicate dataField="tm6CvAllFee" operator="lessOrEqual" value="0.312"/>
+                    </CompoundPredicate>
+                </Attribute>
+                <Attribute partialScore="0.261761">
+                    <SimplePredicate dataField="tm6CvAllFee" operator="greaterThan" value="0.312"/>
+                </Attribute>
+            </Characteristic>
+        </Characteristics>
+    </Scorecard>
+</PMML>

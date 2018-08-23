@@ -34,7 +34,7 @@
     </xs:sequence>
     <xs:attribute name="id" type="xs:string" use="required"/>
     <xs:attribute name="value" type="xs:string" use="required"/>
-    <xs:attribute name="field" type="FIELD-NAME"/>
+    <xs:attribute name="dataField" type="FIELD-NAME"/>
     <xs:attribute name="category" type="xs:string"/>
     <xs:attribute name="mappedValue" type="xs:string"/>
     <xs:attribute name="weight" type="REAL-NUMBER"/>
@@ -102,7 +102,7 @@
       <xs:element ref="Alternate" minOccurs="0"/>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="testStatistic" type="BASELINE-TEST-STATISTIC" use="required"/>
     <xs:attribute name="resetValue" type="REAL-NUMBER" default="0.0" use="optional"/>
     <xs:attribute name="windowSize" type="INT-NUMBER" default="0" use="optional"/>
@@ -219,7 +219,7 @@
         <xs:element ref="FieldValueCount" minOccurs="1" maxOccurs="unbounded"/>
       </xs:choice>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="value" use="required"/>
   </xs:complexType>
 </xs:element>
@@ -229,7 +229,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="value" use="required"/>
     <xs:attribute name="count" type="NUMBER" use="required"/>
   </xs:complexType>
@@ -505,7 +505,7 @@
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="Comparisons" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="isCenterField" default="true">
       <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -1441,7 +1441,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="xs:string" use="required"/>
+    <xs:attribute name="dataField" type="xs:string" use="required"/>
     <xs:attribute name="column" type="xs:string" use="optional"/>
   </xs:complexType>
 </xs:element>
@@ -1459,7 +1459,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>     
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="fieldWeight" type="REAL-NUMBER" default="1"/>        
     <xs:attribute name="compareFunction" type="COMPARE-FUNCTION"/>
   </xs:complexType>
@@ -1788,7 +1788,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="xs:string" use="required"/>
+    <xs:attribute name="dataField" type="xs:string" use="required"/>
     <xs:attribute name="column" type="xs:string" use="optional"/>
     <xs:attribute name="precision" type="xs:double" default="1E-6"/>
     <xs:attribute name="zeroThreshold" type="xs:double" default="1E-16"/>
@@ -2590,7 +2590,7 @@
       <xs:group ref="STRING-ARRAY"/>
     </xs:sequence>
     <xs:attribute name="id" type="ELEMENT-ID" use="required"/>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="operator" type="xs:string" fixed="supersetOf"/>
   </xs:complexType>
 </xs:element>
@@ -2733,7 +2733,7 @@
       <xs:element ref="ContStats" minOccurs="0"/>
       <xs:element ref="Anova" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME"/>
+    <xs:attribute name="dataField" type="FIELD-NAME"/>
     <xs:attribute name="weighted" default="0">
       <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -2887,7 +2887,7 @@
       <xs:element ref="NumericInfo" minOccurs="0"/>
       <xs:group ref="FrequenciesType" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="weighted" default="0">
       <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -3089,7 +3089,7 @@
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="TargetValue" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME"/>
+    <xs:attribute name="dataField" type="FIELD-NAME"/>
     <xs:attribute name="optype" type="OPTYPE"/>
     <xs:attribute name="castInteger">
       <xs:simpleType>
@@ -3579,7 +3579,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="mapMissingTo" type="xs:string"/>
   </xs:complexType>
 </xs:element>
@@ -3590,7 +3590,7 @@
       <xs:element ref="LinearNorm" minOccurs="2" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="mapMissingTo" type="NUMBER"/>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="outliers" type="OUTLIER-TREATMENT-METHOD" default="asIs"/>
   </xs:complexType>
 </xs:element>
@@ -3609,7 +3609,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>    
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>    
     <xs:attribute name="value" type="xs:string" use="required"/>
     <xs:attribute name="mapMissingTo" type="NUMBER"/>
   </xs:complexType>
@@ -3620,7 +3620,7 @@
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="DiscretizeBin" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="mapMissingTo" type="xs:string"/>
     <xs:attribute name="defaultValue" type="xs:string"/>
     <xs:attribute name="dataType" type="DATATYPE"/>
@@ -3658,7 +3658,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="column" type="xs:string" use="required"/>
   </xs:complexType>
 </xs:element>
@@ -3718,7 +3718,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="function" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -3741,14 +3741,14 @@
 	<xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
 	<xs:element ref="BlockIndicator" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+      <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
       <xs:attribute name="n" type="xs:positiveInteger" default="1"/>
   </xs:complexType>
   </xs:element>
 
   <xs:element name="BlockIndicator">
     <xs:complexType>
-      <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+      <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     </xs:complexType>
   </xs:element>
 <xs:element name="TreeModel">
@@ -3817,7 +3817,7 @@
     <xs:sequence>
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="operator" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -3861,7 +3861,7 @@
       <xs:element ref="Extension" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="Array"/>
     </xs:sequence>
-    <xs:attribute name="field" type="FIELD-NAME" use="required"/>
+    <xs:attribute name="dataField" type="FIELD-NAME" use="required"/>
     <xs:attribute name="booleanOperator" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:string">
