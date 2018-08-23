@@ -26,10 +26,10 @@ class FieldDetailTable(detail : FieldDetail) : JBTable(ModelAdapter(detail)){
                 return value.key
             }
         }
-        val operatorValueModel = columnModel.getColumn(OPERATOR_VALUE_COLUMN)
-        operatorValueModel.cellRenderer = SimpleRenderer()
-        val scoreModel = columnModel.getColumn(SCORE_COLUMN)
-        scoreModel.cellRenderer = SimpleRenderer()
+//        val operatorValueModel = columnModel.getColumn(OPERATOR_VALUE_COLUMN)
+//        operatorValueModel.cellRenderer = SimpleRenderer()
+//        val scoreModel = columnModel.getColumn(SCORE_COLUMN)
+//        scoreModel.cellRenderer = SimpleRenderer()
     }
     
     companion object {
@@ -63,7 +63,7 @@ class FieldDetailTable(detail : FieldDetail) : JBTable(ModelAdapter(detail)){
             }
 
             override fun getColumnCount(): Int {
-                return 3
+                return 1
             }
 
             override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {

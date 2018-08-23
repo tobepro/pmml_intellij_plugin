@@ -11,7 +11,7 @@
         <DataField name="rtEarlyMorning51" optype="continuous" dataType="double" />
         <DataField name="tm6CvNumOfCall" optype="continuous" dataType="double" />
         <DataField name="tm6CvAllFee" optype="continuous" dataType="double" />
-        <DataField name="score" optype="continuous" dataType="double"/>
+        <DataField name="finalScore" optype="continuous" dataType="double"/>
         <DataField name="province" optype="categorical" dataType="string" />
     </DataDictionary>
     <Scorecard modelName="JiaYing51" functionName="regression" initialScore="-2.1486" reasonCodeAlgorithm="pointsAbove">
@@ -24,7 +24,7 @@
             <MiningField name="rtEarlyMorning51" invalidValueTreatment="asMissing"/>
             <MiningField name="tm6CvNumOfCall" invalidValueTreatment="asMissing"/>
             <MiningField name="tm6CvAllFee" invalidValueTreatment="asMissing"/>
-            <MiningField name="score" usageType="target"/>
+            <MiningField name="finalScore" usageType="target"/>
         </MiningSchema>
         <Characteristics>
             <!--省分组离散化值-->

@@ -1,7 +1,5 @@
 package enums
 
-import com.intellij.util.ArrayUtil
-
 enum class OperatorEnum(val type : Array<DataFieldTypeEnum>, val key : String, val operator: Array<String>) {
     EQUAL(DataFieldTypeEnum.values(), 
             "=", 
@@ -21,11 +19,11 @@ enum class OperatorEnum(val type : Array<DataFieldTypeEnum>, val key : String, v
     GREATER_THAN_OR_EQUAL(arrayOf(DataFieldTypeEnum.INTEGER, DataFieldTypeEnum.DOUBLE), 
             ">=", 
             arrayOf("greaterOrEqual")),
-    IS_MISSING(arrayOf(DataFieldTypeEnum.INTEGER, DataFieldTypeEnum.DOUBLE), 
-            "null", 
+    IS_MISSING(DataFieldTypeEnum.values(),
+            "missing",
             arrayOf("isMissing")),
-    IS_NOT_MISSING(DataFieldTypeEnum.values(), 
-            "not null", 
+    IS_NOT_MISSING(DataFieldTypeEnum.values(),
+            "not missing",
             arrayOf("isNotMissing")),
     IN(arrayOf(DataFieldTypeEnum.STRING), 
             "in", 
@@ -38,11 +36,11 @@ enum class OperatorEnum(val type : Array<DataFieldTypeEnum>, val key : String, v
             arrayOf("greaterThan", "lessThan")),
     CLOSED_OPEN(arrayOf(DataFieldTypeEnum.INTEGER, DataFieldTypeEnum.DOUBLE),
             ">=..<", 
-            arrayOf("greaterThan", "lessThan")),
+            arrayOf("greaterOrEqual", "lessThan")),
     OPEN_CLOSED(arrayOf(DataFieldTypeEnum.INTEGER, DataFieldTypeEnum.DOUBLE),
             ">..<=", 
-            arrayOf("greaterThan", "lessThan")),
+            arrayOf("greaterThan", "lessOrEqual")),
     CLOSED_CLOSED(arrayOf(DataFieldTypeEnum.INTEGER, DataFieldTypeEnum.DOUBLE),
             ">=..<=", 
-            arrayOf("greaterThan", "lessThan"));
+            arrayOf("greaterOrEqual", "lessOrEqual"));
 }

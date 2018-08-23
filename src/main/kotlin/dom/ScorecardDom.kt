@@ -1,5 +1,6 @@
 package dom
 
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.VirtualFile
 import enums.DataFieldTypeEnum
 import enums.OperatorEnum
@@ -12,6 +13,7 @@ import java.io.File
 
 open class ScorecardDom(file: VirtualFile) {
     companion object {
+        private val logger = Logger.getInstance(ScorecardDom::class.java)
         private const val FIELD_OUT_END = "Score"
     }
 
@@ -23,11 +25,14 @@ open class ScorecardDom(file: VirtualFile) {
     private val charsElement = sdElement.element("Characteristics")
 
     open fun getFields(): List<DataField> {
-        return dicElement.elements().map {
-            DataField(it.attributeValue("name"),
-                    getFieldType(it.attributeValue("dataType"))
-            )
-        }
+        return dicElement.elements()
+                .filter { it.attributeValue("name") != "finalScore" }
+                .map {
+                    DataField(it.attributeValue("name"),
+                            getFieldType(it.attributeValue("dataType")),
+                            getFieldDetailByName(it.attributeValue("name"), DataFieldTypeEnum.valueOf(it.attributeValue("dataType").toUpperCase()))
+                    )
+                }
     }
 
     private fun getFieldType(dataType: String): DataFieldTypeEnum {
@@ -53,14 +58,15 @@ open class ScorecardDom(file: VirtualFile) {
     }
 
     open fun getFieldDetailByName(name: String, type: DataFieldTypeEnum): FieldDetail {
-        val ele = charsElement.elements().first {
+        val ele = charsElement.elements().filter {
             it.attributeValue("name") == name
-        }
-        val attrs = ele.elements().map {
+        }.firstOrNull()
+
+        val attrs = ele?.elements()?.map {
             val attr = Attribute(score = it.attributeValue("partialScore"))
             if (it.elements("CompoundPredicate").size > 0) {
                 val opElements = it.element("CompoundPredicate").elements("SimplePredicate")
-                attr.operatorValue = opElements.joinToString("", "", ",") { ele ->
+                attr.operatorValue = opElements.joinToString(",", "", "") { ele ->
                     ele.attributeValue("value")
                 }
                 if (opElements.size < 2) {
@@ -73,13 +79,13 @@ open class ScorecardDom(file: VirtualFile) {
                 it.element("SimplePredicate").apply {
                     attr.operator = MyUtil.getOperatorType(arrayOf(attributeValue("operator")))
                     attr.operatorValue = if (attr.operator in arrayOf(OperatorEnum.IS_MISSING, OperatorEnum.IS_NOT_MISSING))
-                        ""
+                        "missing"
                     else
                         attributeValue("value")
                 }
             }
             attr
-        }
+        }?: arrayListOf(Attribute())
         return FieldDetail(name, type, attrs)
     }
 
