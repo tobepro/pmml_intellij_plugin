@@ -2,13 +2,13 @@ package dom
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.VirtualFile
+import common.Constants
+import common.Util
 import enums.DataFieldTypeEnum
 import enums.OperatorEnum
 import model.Attribute
 import model.DataField
-import model.FieldDetail
 import org.dom4j.io.SAXReader
-import util.MyUtil
 import java.io.File
 
 open class ScorecardDom(file: VirtualFile) {
@@ -26,7 +26,7 @@ open class ScorecardDom(file: VirtualFile) {
 
     open fun getFields(): List<DataField> {
         return dicElement.elements()
-                .filter { it.attributeValue("name") != "finalScore" }
+                .filter { it.attributeValue("name") != Constants.FINAL_SCORE_FIELD }
                 .map {
                     DataField(it.attributeValue("name"),
                             getFieldType(it.attributeValue("dataType")),
@@ -57,12 +57,12 @@ open class ScorecardDom(file: VirtualFile) {
         sdElement.attributeValue("initialScore", score.toString())
     }
 
-    open fun getFieldDetailByName(name: String, type: DataFieldTypeEnum): FieldDetail {
-        val ele = charsElement.elements().filter {
+    open fun getFieldDetailByName(name: String, type: DataFieldTypeEnum): List<Attribute> {
+        val ele = charsElement.elements().firstOrNull {
             it.attributeValue("name") == name
-        }.firstOrNull()
+        }
 
-        val attrs = ele?.elements()?.map {
+        return ele?.elements()?.map {
             val attr = Attribute(score = it.attributeValue("partialScore"))
             if (it.elements("CompoundPredicate").size > 0) {
                 val opElements = it.element("CompoundPredicate").elements("SimplePredicate")
@@ -72,21 +72,20 @@ open class ScorecardDom(file: VirtualFile) {
                 if (opElements.size < 2) {
                     throw RuntimeException("field=$name attribute is empty")
                 }
-                attr.operator = MyUtil.getOperatorType(opElements.map { ele ->
+                attr.operator = Util.getOperatorType(opElements.map { ele ->
                     ele.attributeValue("operator")
                 }.toTypedArray())
             } else {
                 it.element("SimplePredicate").apply {
-                    attr.operator = MyUtil.getOperatorType(arrayOf(attributeValue("operator")))
+                    attr.operator = Util.getOperatorType(arrayOf(attributeValue("operator")))
                     attr.operatorValue = if (attr.operator in arrayOf(OperatorEnum.IS_MISSING, OperatorEnum.IS_NOT_MISSING))
-                        "missing"
+                        ""
                     else
                         attributeValue("value")
                 }
             }
             attr
-        }?: arrayListOf(Attribute())
-        return FieldDetail(name, type, attrs)
+        }?: arrayListOf()
     }
 
 }

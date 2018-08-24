@@ -1,4 +1,4 @@
-package editor.table
+package editor
 
 import com.intellij.openapi.ui.ComboBoxTableRenderer
 import com.intellij.ui.table.JBTable
@@ -7,12 +7,15 @@ import enums.DataFieldTypeEnum
 import model.DataField
 import java.awt.Component
 import javax.swing.JTable
+import javax.swing.ListSelectionModel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
-class DataFieldTable(dataFieldList: List<DataField>) : JBTable(ModelAdapter(dataFieldList.toMutableList())) {
+class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(ModelAdapter(dataFieldList.toMutableList())) {
     init {
         autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        
         val columnModel = getColumnModel()
         val nameColumn = columnModel.getColumn(NAME_COLUMN)
         nameColumn.cellRenderer = NameRenderer()
@@ -27,8 +30,14 @@ class DataFieldTable(dataFieldList: List<DataField>) : JBTable(ModelAdapter(data
                 return value.dataType
             }
         }
+        emptyText.text = "暂无数据"
     }
 
+    override fun isCellEditable(row: Int, column: Int): Boolean {
+        val dataField = model.getSelectDataField(row)
+        return (selectedColumn == DATA_TYPE_COLUMN && dataField.attrs.isEmpty())
+    }
+    
     override fun getModel(): ModelAdapter {
         return super.getModel() as ModelAdapter
     }
@@ -96,10 +105,15 @@ class DataFieldTable(dataFieldList: List<DataField>) : JBTable(ModelAdapter(data
             }
 
             override fun addRow() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                FieldCreateDialog().run { 
+                    show()
+                    if (exitCode == 0) {
+                        add(getDataField())
+                    }
+                }
             }
             
-            fun getDataFields() : MutableList<DataField> {
+            fun getAllDataField() : MutableList<DataField> {
                 return dataFieldList
             }
             
@@ -140,6 +154,10 @@ class DataFieldTable(dataFieldList: List<DataField>) : JBTable(ModelAdapter(data
                     return index + 1
                 }
                 return -1
+            }
+            
+            fun getSelectDataField(row : Int) : DataField {
+                return dataFieldList[row]
             }
         }
         
