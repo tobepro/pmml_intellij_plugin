@@ -10,6 +10,8 @@ import com.intellij.ui.layout.panel
 import dom.ScorecardDom
 import enums.DataFieldTypeEnum
 import java.awt.FlowLayout
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
 import javax.swing.JPanel
 import javax.swing.JTextField
 
@@ -32,10 +34,12 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
             }
         }
 
+        // 实时保存字段列表
         dataTable.model.addTableModelListener { _ ->
             dataFieldList = dataTable.model.getAllDataField()
         }
 
+        // 实时保存字段详情
         @Suppress("UNCHECKED_CAST")
         detailTable.model.addTableModelListener { e ->
             if (dataTable.selectedRow >= 0) {
@@ -43,6 +47,18 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
             }
         }
 
+        addFocusListener(object : FocusListener {
+            override fun focusLost(e: FocusEvent?) {
+                dom.save(dataFieldList)
+            }
+
+            override fun focusGained(e: FocusEvent?) {
+                // do nothing
+            }
+
+        })
+
+        // 添加工具栏
         val dataTablePanel = ToolbarDecorator.createDecorator(dataTable).disableUpDownActions().createPanel()
         val detailTablePanel = ToolbarDecorator.createDecorator(detailTable).createPanel()
 
@@ -55,7 +71,6 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
                 right { detailTablePanel(grow, push) }
             }
         })
-
     }
 
     override fun getData(dataId: String?): Any? {
