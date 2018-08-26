@@ -1,5 +1,5 @@
-<PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3">
-    <Header/>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3" >
+    <Header description="score card"/>
     <DataDictionary>
         <DataField name="channel51ProvinceValue" optype="continuous" dataType="integer"/>
         <DataField name="ageProvidentVar" optype="continuous" dataType="integer"/>
