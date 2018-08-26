@@ -6,7 +6,7 @@ package model.dom;
 /**
  * http://www.dmg.org/PMML-4_3:DATATYPE enumeration.
  */
-public enum DATATYPE implements com.intellij.util.xml.NamedEnum {
+public enum DataType implements com.intellij.util.xml.NamedEnum {
 	BOOLEAN ("boolean"),
 	DATE ("date"),
 	DATE_DAYS_SINCE_0 ("dateDaysSince[0]"),
@@ -26,7 +26,7 @@ public enum DATATYPE implements com.intellij.util.xml.NamedEnum {
 	TIME_SECONDS ("timeSeconds");
 
 	private final String value;
-	private DATATYPE(String value) { this.value = value; }
+	private DataType(String value) { this.value = value; }
 	public String getValue() { return value; }
 
 }

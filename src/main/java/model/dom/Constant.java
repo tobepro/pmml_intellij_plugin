@@ -31,7 +31,7 @@ public interface Constant extends DomElement {
 	 * @return the value of the dataType child.
 	 */
 	@NotNull
-	GenericAttributeValue<DATATYPE> getDataType();
+	GenericAttributeValue<DataType> getDataType();
 
 
 }

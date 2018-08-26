@@ -7,8 +7,6 @@ import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
  * http://www.dmg.org/PMML-4_3:DefineFunctionElemType interface.
  */
@@ -29,7 +27,7 @@ public interface DefineFunction extends DomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<OPTYPE> getOptype();
+	GenericAttributeValue<Optype> getOptype();
 
 
 	/**
@@ -37,7 +35,7 @@ public interface DefineFunction extends DomElement {
 	 * @return the value of the dataType child.
 	 */
 	@NotNull
-	GenericAttributeValue<DATATYPE> getDataType();
+	GenericAttributeValue<DataType> getDataType();
 
 
 	/**

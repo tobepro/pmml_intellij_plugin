@@ -3,11 +3,11 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.Required;
+import com.intellij.util.xml.SubTag;
+import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:MiningSchemaElemType interface.
@@ -33,11 +33,13 @@ public interface MiningSchema extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTagList("MiningField")
 	java.util.List<MiningField> getMiningFields();
 	/**
 	 * Adds new child to the list of MiningField children.
 	 * @return created child
 	 */
+	@SubTag("MiningField")
 	MiningField addMiningField();
 
 

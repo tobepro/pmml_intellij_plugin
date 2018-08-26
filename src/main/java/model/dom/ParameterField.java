@@ -26,7 +26,7 @@ public interface ParameterField extends DomElement {
 	 * @return the value of the optype child.
 	 */
 	@NotNull
-	GenericAttributeValue<OPTYPE> getOptype();
+	GenericAttributeValue<Optype> getOptype();
 
 
 	/**
@@ -34,7 +34,7 @@ public interface ParameterField extends DomElement {
 	 * @return the value of the dataType child.
 	 */
 	@NotNull
-	GenericAttributeValue<DATATYPE> getDataType();
+	GenericAttributeValue<DataType> getDataType();
 
 
 }

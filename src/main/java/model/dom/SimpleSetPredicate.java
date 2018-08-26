@@ -4,10 +4,7 @@
 package model.dom;
 
 import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:SimpleSetPredicateElemType interface.
@@ -51,6 +48,7 @@ public interface SimpleSetPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTagList("Array")
 	Array getArray();
 
 

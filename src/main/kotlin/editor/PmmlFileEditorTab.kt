@@ -12,11 +12,12 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.layout.panel
 import com.intellij.util.xml.DomFileDescription
 import com.intellij.util.xml.DomManager
+import common.Constants
 import common.Util
 import enums.DataFieldTypeEnum
 import model.Attribute
 import model.DataField
-import model.dom.PMML
+import model.dom.*
 import java.awt.FlowLayout
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
@@ -25,24 +26,25 @@ import javax.swing.JTextField
 
 class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module, file: VirtualFile) : JPanel(), DataProvider {
     private val logger = Logger.getInstance(PmmlFileEditorTab::class.java)
+    private lateinit var pmml: PMML
 
     init {
         val document = FileDocumentManager.getInstance().getDocument(file)
         val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document!!)
         val manager = DomManager.getDomManager(project)
         manager.registerFileDescription(DomFileDescription(PMML::class.java, "PMML"))
-        val pmml = manager
+        pmml = manager
                 .getFileElement(psiFile as XmlFile, PMML::class.java)!!
                 .rootElement
 
-        var dataFieldList = pmml.dataDictionary.dataFields.map { field ->
+        var dataFieldList = pmml.dataDictionary.dataFields.filter { it.name.value != Constants.FINAL_SCORE_FIELD }.map { field ->
             DataField(
                     field.name.value!!,
                     Util.dataTypeEnumConvert(field.dataType.value!!),
                     pmml.scorecard.characteristics.characteristics
-                            .first { it.name.value == field.name.value }
-                            .attributes
-                            .map { attr ->
+                            .firstOrNull { it.name.value == field.name.value }
+                            ?.attributes
+                            ?.map { attr ->
                                 val score = attr.partialScore.value
                                 val (operator, opValue) = if (attr.compoundPredicate.exists()) {
                                     val operatorArray = arrayListOf<String>()
@@ -57,10 +59,10 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
                                     Pair(o, opValueArray.joinToString(",", "", ""))
                                 } else {
                                     val o = Util.getOperatorType(arrayOf(attr.simplePredicate.operator.value!!.value))
-                                    Pair(o, attr.simplePredicate.value.value!!)
+                                    Pair(o, attr.simplePredicate.value.value.orEmpty())
                                 }
                                 Attribute(score.toString(), operator, opValue)
-                            }
+                            } ?: arrayListOf()
             )
         }
 
@@ -92,8 +94,8 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
 
         addFocusListener(object : FocusListener {
             override fun focusLost(e: FocusEvent?) {
-//                dom.save(dataFieldList)
                 logger.info("触发保存动作")
+                saveData(dataFieldList)
             }
 
             override fun focusGained(e: FocusEvent?) {
@@ -115,6 +117,51 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
                 right { detailTablePanel(grow, push) }
             }
         })
+    }
+
+    private fun saveData(dataFieldList: List<DataField>) {
+        pmml.dataDictionary.dataFields.clear()
+        pmml.dataDictionary.addDataField().apply {
+            name.value = Constants.FINAL_SCORE_FIELD
+            optype.value = Optype.CONTINUOUS
+            dataType.value = DataType.DOUBLE
+        }
+
+        pmml.scorecard.apply {
+            miningSchema.miningFields.clear()
+            characteristics.characteristics.clear()
+
+            miningSchema.addMiningField().apply {
+                name.value = Constants.FINAL_SCORE_FIELD
+                usageType.value = FIELDUSAGETYPE.TARGET
+            }
+        }
+
+        dataFieldList.forEach { field ->
+            pmml.dataDictionary.addDataField().apply {
+                name.value = field.name
+                optype.value = Optype.valueOf(field.type.opType.toUpperCase())
+                dataType.value = DataType.valueOf(field.type.dataType.toUpperCase())
+            }
+            pmml.scorecard.apply {
+                miningSchema.addMiningField().apply {
+                    name.value = field.name
+                    invalidValueTreatment.value = INVALIDVALUETREATMENTMETHOD.AS_MISSING
+                }
+
+                characteristics.addCharacteristic().apply {
+                    name.value = field.name
+                    reasonCode.value = field.name
+                    baselineScore.value = 0.0
+                    field.attrs.forEach { attr ->
+                        addAttribute().apply {
+                            partialScore.value = attr.score.toDouble()
+                            // TODO：填充
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun getData(dataId: String?): Any? {

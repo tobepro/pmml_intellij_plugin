@@ -42,6 +42,7 @@ public interface CompoundPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTagList("SimplePredicate")
 	List<SimplePredicate> getSimplePredicates();
 
 
@@ -60,6 +61,7 @@ public interface CompoundPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTag("SimpleSetPredicate")
 	SimpleSetPredicate getSimpleSetPredicate();
 
 

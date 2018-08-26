@@ -3,11 +3,11 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import com.intellij.util.xml.SubTag;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:ScorecardElemType interface.
@@ -106,6 +106,7 @@ public interface Scorecard extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTag("MiningSchema")
 	MiningSchema getMiningSchema();
 
 
@@ -155,6 +156,7 @@ public interface Scorecard extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTag("Characteristics")
 	Characteristics getCharacteristics();
 
 

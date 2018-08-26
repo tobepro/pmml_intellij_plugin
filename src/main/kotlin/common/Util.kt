@@ -4,19 +4,19 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.ArrayUtil
 import enums.DataFieldTypeEnum
 import enums.OperatorEnum
-import model.dom.DATATYPE
+import model.dom.DataType
 
 object Util {
     private val logger = Logger.getInstance(Util::class.java)
     fun getOperatorType(op : Array<String>) : OperatorEnum {
         return OperatorEnum.values().first { ArrayUtil.equals(it.operator.sortedArray(), op.sortedArray(), String::equals) }
     }
-    fun dataTypeEnumConvert(domType: DATATYPE): DataFieldTypeEnum {
+    fun dataTypeEnumConvert(domType: DataType): DataFieldTypeEnum {
         return DataFieldTypeEnum.values().first { it.dataType == domType.value }
     }
 
-    fun dataTypeEnumReverseConvert(dataType: DataFieldTypeEnum): DATATYPE {
-        return DATATYPE.values().first { it.value == dataType.dataType }
+    fun dataTypeEnumReverseConvert(dataType: DataFieldTypeEnum): DataType {
+        return DataType.values().first { it.value == dataType.dataType }
     }
 
 

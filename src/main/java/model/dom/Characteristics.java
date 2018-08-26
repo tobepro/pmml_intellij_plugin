@@ -3,11 +3,11 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.Required;
+import com.intellij.util.xml.SubTag;
+import com.intellij.util.xml.SubTagList;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:CharacteristicsElemType interface.
@@ -33,11 +33,13 @@ public interface Characteristics extends DomElement {
 	 */
 	@NotNull
 	@Required
+	@SubTagList("Characteristic")
 	java.util.List<Characteristic> getCharacteristics();
 	/**
 	 * Adds new child to the list of Characteristic children.
 	 * @return created child
 	 */
+	@SubTag("Characteristic")
 	Characteristic addCharacteristic();
 
 

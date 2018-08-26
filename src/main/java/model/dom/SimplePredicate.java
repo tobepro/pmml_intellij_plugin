@@ -3,11 +3,11 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
+import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:SimplePredicateElemType interface.
@@ -37,6 +37,7 @@ public interface SimplePredicate extends DomElement {
 	 * @return the value of the value child.
 	 */
 	@NotNull
+	@Attribute("value")
 	GenericAttributeValue<String> getValue();
 
 

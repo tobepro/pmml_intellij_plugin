@@ -7,8 +7,6 @@ import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
  * http://www.dmg.org/PMML-4_3:MiningFieldElemType interface.
  */
@@ -36,7 +34,7 @@ public interface MiningField extends DomElement {
 	 * @return the value of the optype child.
 	 */
 	@NotNull
-	GenericAttributeValue<OPTYPE> getOptype();
+	GenericAttributeValue<Optype> getOptype();
 
 
 	/**
