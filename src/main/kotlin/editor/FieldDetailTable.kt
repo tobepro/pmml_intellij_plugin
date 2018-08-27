@@ -2,17 +2,22 @@ package editor
 
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
+import common.Util
 import editor.table.MyComboBoxTableRenderer
 import enums.OperatorEnum
-import model.Attribute
+import model.dom.Characteristic
+import model.dom.enums.BooleanOperator
 import model.dom.enums.DataType
+import model.dom.enums.Operator
+import model.dom.enums.Type
+import org.fest.util.Collections
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
-class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) : JBTable(ModelAdapter(attrs)) {
+class FieldDetailTable(private var fieldType: DataType, prop: Characteristic? ) : JBTable(ModelAdapter(prop)) {
     private val operatorModel = getColumnModel().getColumn(OPERATOR_COLUMN)
 
     init {
@@ -44,10 +49,10 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun updateRows(fieldType: DataType, attrs: List<Attribute>) {
+    fun updateRows(fieldType: DataType, prop: Characteristic?) {
         (operatorModel.cellRenderer as MyComboBoxTableRenderer<OperatorEnum>).updateValues(OperatorEnum.values().filter { it.type.contains(fieldType) }.toTypedArray())
         (operatorModel.cellEditor as MyComboBoxTableRenderer<OperatorEnum>).updateValues(OperatorEnum.values().filter { it.type.contains(fieldType) }.toTypedArray())
-        model.reset(attrs)
+        model.reset(prop)
     }
 
     companion object {
@@ -55,9 +60,8 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
         const val OPERATOR_VALUE_COLUMN = 1
         const val SCORE_COLUMN = 2
 
-        class ModelAdapter(attrs: List<Attribute>) : AbstractTableModel(), EditableModel {
-            private var attrs = attrs.toMutableList()
-
+        class ModelAdapter(private var prop: Characteristic?) : AbstractTableModel(), EditableModel {
+            private var attrs = prop?.attributes
             override fun getColumnName(column: Int): String {
                 return when (column) {
                     OPERATOR_COLUMN -> "操作符"
@@ -77,7 +81,7 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
             }
 
             override fun getRowCount(): Int {
-                return attrs.size
+                return attrs?.size?:0
             }
 
             override fun getColumnCount(): Int {
@@ -85,11 +89,26 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
             }
 
             override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
-                return if (0 <= rowIndex && rowIndex < attrs.size) {
+                return if (attrs != null && 0 <= rowIndex && rowIndex < attrs!!.size) {
+                    val attr = attrs!![rowIndex]
                     when (columnIndex) {
-                        OPERATOR_COLUMN -> attrs[rowIndex].operator
-                        OPERATOR_VALUE_COLUMN -> attrs[rowIndex].operatorValue
-                        SCORE_COLUMN -> attrs[rowIndex].score?:""
+                        OPERATOR_COLUMN -> when {
+                            attr.simpleSetPredicate.exists() ->
+                                OperatorEnum.valueOf(attr.simpleSetPredicate.booleanOperator.value.toString())
+                            attr.simplePredicate.exists() ->
+                                OperatorEnum.valueOf(attr.simplePredicate.operator.value.toString())
+                            else ->
+                                Util.getOperatorType(attr.compoundPredicate.simplePredicates.map { it.operator.value!!.value }.toTypedArray())
+                        }
+                        OPERATOR_VALUE_COLUMN -> when {
+                            attr.simpleSetPredicate.exists() ->
+                                attr.simpleSetPredicate.arrays.joinToString(",", "", "") { it.value }
+                            attr.simplePredicate.exists() ->
+                                attr.simplePredicate.value.value?: ""
+                            else ->
+                                attr.compoundPredicate.simplePredicates.map { it.value.value }.joinToString(",", "", "")
+                        }
+                        SCORE_COLUMN -> attrs!![rowIndex].partialScore.value!!
                         else -> "error"
                     }
                 } else {
@@ -98,26 +117,61 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
             }
 
             override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
-                when (columnIndex) {
-                    OPERATOR_COLUMN -> attrs[rowIndex].operator = aValue as OperatorEnum
-                    OPERATOR_VALUE_COLUMN -> attrs[rowIndex].operatorValue = aValue as String
-                    SCORE_COLUMN -> attrs[rowIndex].score = aValue as Double
+                val attr = attrs!![rowIndex]
+                when {
+                    attr.simpleSetPredicate.exists() -> when(columnIndex) {
+                        SCORE_COLUMN ->
+                            attr.partialScore.value = aValue as Double
+                        OPERATOR_COLUMN ->
+                            attr.simpleSetPredicate.booleanOperator.value = BooleanOperator.valueOf((aValue as OperatorEnum).toString())
+                        OPERATOR_VALUE_COLUMN -> {
+                            attr.simpleSetPredicate.arrays.forEach { it.undefine() }
+                            (aValue as String).split(",").forEach { v ->
+                                attr.simpleSetPredicate.addArray().apply {
+                                    type.value = Type.STRING
+                                    value = v
+                                }
+                            }
+                        }
+                    }
+                    attr.simplePredicate.exists() -> when(columnIndex) {
+                        SCORE_COLUMN -> attr.partialScore.value = aValue as Double
+                        OPERATOR_COLUMN -> attr.simplePredicate.operator.value = Operator.valueOf((aValue as OperatorEnum).type[0].toString())
+                        OPERATOR_VALUE_COLUMN -> attr.simplePredicate.value.value = aValue as String
+                    }
+                    attr.compoundPredicate.exists() -> when(columnIndex) {
+                        SCORE_COLUMN ->
+                            attr.partialScore.value = aValue as Double
+                        OPERATOR_COLUMN -> {
+                            (aValue as OperatorEnum).operator.forEachIndexed { index, op ->
+                                attr.compoundPredicate.addSimplePredicate().apply {
+                                    operator.value = Operator.values().first { it.value == op }
+                                }
+                            }
+                        }
+                        OPERATOR_VALUE_COLUMN -> {
+                            val values = (aValue as String).split(",")
+                            attr.compoundPredicate.simplePredicates.forEachIndexed { index, simplePredicate ->
+                                simplePredicate.value.value = values[index]
+                            }
+                        }
+                    }
                 }
                 fireTableCellUpdated(rowIndex, columnIndex)
             }
 
             override fun removeRow(idx: Int) {
-                attrs.removeAt(idx)
+                attrs!!.removeAt(idx)
                 fireTableRowsDeleted(idx, idx)
             }
 
             override fun exchangeRows(oldIndex: Int, newIndex: Int) {
-                attrs.add(newIndex, attrs.removeAt(oldIndex))
+                attrs!!.add(newIndex, attrs!!.removeAt(oldIndex))
                 fireTableRowsUpdated(Math.min(oldIndex, newIndex), Math.min(oldIndex, newIndex))
             }
 
             override fun canExchangeRows(oldIndex: Int, newIndex: Int): Boolean {
-                return true
+                return false
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
@@ -125,18 +179,16 @@ class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) 
             }
 
             override fun addRow() {
-                val attr = Attribute(null, OperatorEnum.EQUAL, "")
-                attrs.add(attr)
-                fireTableRowsInserted(attrs.size - 1, attrs.size - 1)
+                prop?.addAttribute()
+                if (!Collections.isNullOrEmpty(attrs)) {
+                    fireTableRowsInserted(attrs!!.size - 1, attrs!!.size - 1)
+                }
             }
 
-            fun reset(original: List<Attribute>) {
-                attrs = original.toMutableList()
+            fun reset(prop: Characteristic?) {
+                this.prop = prop
+                attrs = prop?.attributes
                 fireTableDataChanged()
-            }
-
-            fun getAttrList(): List<Attribute> {
-                return attrs
             }
         }
 
