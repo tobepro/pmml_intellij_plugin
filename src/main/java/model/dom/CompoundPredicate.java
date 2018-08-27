@@ -45,6 +45,9 @@ public interface CompoundPredicate extends DomElement {
 	@Required
 	@SubTagList("SimplePredicate")
 	List<SimplePredicate> getSimplePredicates();
+	
+	@SubTag("SimplePredicate")
+	SimplePredicate addSimplePredicate();
 
 
 	/**

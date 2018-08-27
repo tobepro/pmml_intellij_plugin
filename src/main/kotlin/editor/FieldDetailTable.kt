@@ -1,19 +1,18 @@
 package editor
 
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
 import editor.table.MyComboBoxTableRenderer
-import enums.DataFieldTypeEnum
 import enums.OperatorEnum
 import model.Attribute
+import model.dom.enums.DataType
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
-class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Attribute>) : JBTable(ModelAdapter(attrs)) {
+class FieldDetailTable(private var fieldType: DataType, attrs: List<Attribute>) : JBTable(ModelAdapter(attrs)) {
     private val operatorModel = getColumnModel().getColumn(OPERATOR_COLUMN)
 
     init {
@@ -45,15 +44,13 @@ class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Att
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun updateRows(fieldType: DataFieldTypeEnum, attrs: List<Attribute>) {
+    fun updateRows(fieldType: DataType, attrs: List<Attribute>) {
         (operatorModel.cellRenderer as MyComboBoxTableRenderer<OperatorEnum>).updateValues(OperatorEnum.values().filter { it.type.contains(fieldType) }.toTypedArray())
         (operatorModel.cellEditor as MyComboBoxTableRenderer<OperatorEnum>).updateValues(OperatorEnum.values().filter { it.type.contains(fieldType) }.toTypedArray())
         model.reset(attrs)
     }
 
     companion object {
-        private val logger = Logger.getInstance(FieldDetailTable::class.java)
-
         const val OPERATOR_COLUMN = 0
         const val OPERATOR_VALUE_COLUMN = 1
         const val SCORE_COLUMN = 2
@@ -74,7 +71,7 @@ class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Att
                 return when (columnIndex) {
                     OPERATOR_COLUMN -> OperatorEnum::class.java
                     OPERATOR_VALUE_COLUMN -> String::class.java
-                    SCORE_COLUMN -> String::class.java
+                    SCORE_COLUMN -> Double::class.java
                     else -> String::class.java
                 }
             }
@@ -92,7 +89,7 @@ class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Att
                     when (columnIndex) {
                         OPERATOR_COLUMN -> attrs[rowIndex].operator
                         OPERATOR_VALUE_COLUMN -> attrs[rowIndex].operatorValue
-                        SCORE_COLUMN -> attrs[rowIndex].score
+                        SCORE_COLUMN -> attrs[rowIndex].score?:""
                         else -> "error"
                     }
                 } else {
@@ -104,7 +101,7 @@ class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Att
                 when (columnIndex) {
                     OPERATOR_COLUMN -> attrs[rowIndex].operator = aValue as OperatorEnum
                     OPERATOR_VALUE_COLUMN -> attrs[rowIndex].operatorValue = aValue as String
-                    SCORE_COLUMN -> attrs[rowIndex].score = aValue as String
+                    SCORE_COLUMN -> attrs[rowIndex].score = aValue as Double
                 }
                 fireTableCellUpdated(rowIndex, columnIndex)
             }
@@ -128,47 +125,14 @@ class FieldDetailTable(private var fieldType: DataFieldTypeEnum, attrs: List<Att
             }
 
             override fun addRow() {
-                val attr = Attribute("", OperatorEnum.EQUAL, "")
+                val attr = Attribute(null, OperatorEnum.EQUAL, "")
                 attrs.add(attr)
                 fireTableRowsInserted(attrs.size - 1, attrs.size - 1)
-            }
-
-            fun add(attr: Attribute) {
-                attrs.add(attr)
-                fireTableRowsInserted(attrs.size - 1, attrs.size - 1)
-            }
-
-            fun remove(index: Int): Attribute {
-                val attr = attrs.removeAt(index)
-                fireTableRowsDeleted(index, index)
-                return attr
             }
 
             fun reset(original: List<Attribute>) {
                 attrs = original.toMutableList()
                 fireTableDataChanged()
-            }
-
-            fun moveUp(index: Int): Int {
-                if (index > 0) {
-                    val attr = attrs[index]
-                    attrs.removeAt(index)
-                    attrs.add(index - 1, attr)
-                    fireTableRowsUpdated(index - 1, index)
-                    return index - 1
-                }
-                return -1
-            }
-
-            fun moveDown(index: Int): Int {
-                if (index > rowCount - 1) {
-                    val attr = attrs[index]
-                    attrs.removeAt(index)
-                    attrs.add(index + 1, attr)
-                    fireTableRowsUpdated(index, index + 1)
-                    return index + 1
-                }
-                return -1
             }
 
             fun getAttrList(): List<Attribute> {

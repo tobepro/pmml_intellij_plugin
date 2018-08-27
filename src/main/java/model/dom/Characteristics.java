@@ -20,10 +20,7 @@ public interface Characteristics extends DomElement {
 	 */
 	@NotNull
 	java.util.List<Extension> getExtensions();
-	/**
-	 * Adds new child to the list of Extension children.
-	 * @return created child
-	 */
+	
 	Extension addExtension();
 
 
@@ -35,12 +32,7 @@ public interface Characteristics extends DomElement {
 	@Required
 	@SubTagList("Characteristic")
 	java.util.List<Characteristic> getCharacteristics();
-	/**
-	 * Adds new child to the list of Characteristic children.
-	 * @return created child
-	 */
-	@SubTag("Characteristic")
+	
+	@SubTagList("Characteristic")
 	Characteristic addCharacteristic();
-
-
 }

@@ -3,15 +3,17 @@ package editor
 import com.intellij.openapi.ui.ComboBoxTableRenderer
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
-import enums.DataFieldTypeEnum
-import model.DataField
+import model.dom.DataDictionary
+import model.dom.DataField
+import model.dom.PMML
+import model.dom.enums.DataType
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
-class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(ModelAdapter(dataFieldList.toMutableList())) {
+class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
     init {
         autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -20,22 +22,23 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
         val nameColumn = columnModel.getColumn(NAME_COLUMN)
         nameColumn.cellRenderer = NameRenderer()
         val typeColumn = columnModel.getColumn(DATA_TYPE_COLUMN)
-        typeColumn.cellRenderer = object : ComboBoxTableRenderer<DataFieldTypeEnum>(DataFieldTypeEnum.values()) {
-            override fun getTextFor(value: DataFieldTypeEnum): String {
-                return value.dataType
+        typeColumn.cellRenderer = object : ComboBoxTableRenderer<DataType>(DataType.values()) {
+            override fun getTextFor(value: DataType): String {
+                return value.value
             }
         }
-        typeColumn.cellEditor = object : ComboBoxTableRenderer<DataFieldTypeEnum>(DataFieldTypeEnum.values()) {
-            override fun getTextFor(value: DataFieldTypeEnum): String {
-                return value.dataType
+        typeColumn.cellEditor = object : ComboBoxTableRenderer<DataType>(DataType.values()) {
+            override fun getTextFor(value: DataType): String {
+                return value.value
             }
         }
         emptyText.text = "暂无数据"
     }
 
     override fun isCellEditable(row: Int, column: Int): Boolean {
-        val dataField = model.getSelectDataField(row)
-        return (selectedColumn == DATA_TYPE_COLUMN && dataField.attrs.isEmpty())
+//        val dataField = model.getSelectDataField(row)
+//        return (selectedColumn == DATA_TYPE_COLUMN)
+        return false
     }
     
     override fun getModel(): ModelAdapter {
@@ -46,7 +49,9 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
         const val NAME_COLUMN = 0
         const val DATA_TYPE_COLUMN = 1
         
-        class ModelAdapter(private val dataFieldList : MutableList<DataField>) : AbstractTableModel(),EditableModel {
+        class ModelAdapter(private val dic : DataDictionary) : AbstractTableModel(),EditableModel {
+            private val dataFieldList = dic.dataFields as MutableList
+            
             override fun getColumnName(column: Int): String {
                 return if (column == NAME_COLUMN) "字段名" else "数据类型"
             }
@@ -61,9 +66,9 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
             override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
                 return if (0 <= rowIndex && rowIndex < dataFieldList.size) {
                     if (columnIndex == NAME_COLUMN) {
-                        dataFieldList[rowIndex].name
+                        dataFieldList[rowIndex].name.value!!
                     } else {
-                        dataFieldList[rowIndex].type
+                        dataFieldList[rowIndex].dataType.value!!
                     }
                 } else {
                     "should not be happened"
@@ -73,17 +78,17 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
             override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
                 when(columnIndex) {
                     NAME_COLUMN -> {
-                        dataFieldList[rowIndex].name = aValue as String
+                        dataFieldList[rowIndex].name.value = aValue as String
                     }
                     DATA_TYPE_COLUMN -> {
-                        dataFieldList[rowIndex].type = aValue as DataFieldTypeEnum
+                        dataFieldList[rowIndex].dataType.value = aValue as DataType
                     }
                 }
                 fireTableCellUpdated(rowIndex, columnIndex)
             }
 
             override fun removeRow(idx: Int) {
-                dataFieldList.removeAt(idx)
+                dataFieldList[idx].undefine()
                 fireTableRowsDeleted(idx, idx)
             }
 
@@ -97,7 +102,7 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
             }
 
             override fun getColumnClass(columnIndex: Int): Class<*> {
-                return if (DATA_TYPE_COLUMN == columnIndex) DataFieldTypeEnum::class.java else String::class.java
+                return if (DATA_TYPE_COLUMN == columnIndex) DataType::class.java else String::class.java
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
@@ -108,52 +113,13 @@ class DataFieldTable(private val dataFieldList: List<DataField>) : JBTable(Model
                 FieldCreateDialog().run { 
                     show()
                     if (exitCode == 0) {
-                        add(getDataField())
+                        val fieldDialog = getDataField()
+                        dic.addDataField().apply { 
+                            name.value = fieldDialog.name
+                            dataType.value = fieldDialog.dataType
+                        }
                     }
                 }
-            }
-            
-            fun getAllDataField() : MutableList<DataField> {
-                return dataFieldList
-            }
-            
-            fun add(dataField : DataField) {
-                dataFieldList.add(dataField)
-                fireTableRowsInserted(dataFieldList.size - 1, dataFieldList.size - 1)
-            }
-            
-            fun remove(index : Int) : DataField {
-                val dataField = dataFieldList.removeAt(index)
-                fireTableRowsDeleted(index, index)
-                return dataField
-            }
-            
-            fun reset(original : List<DataField>) {
-                dataFieldList.clear()
-                dataFieldList.addAll(original)
-                fireTableDataChanged()
-            }
-            
-            fun moveUp(index : Int) : Int {
-                if (index > 0) {
-                    val dataField = dataFieldList[index]
-                    dataFieldList.removeAt(index)
-                    dataFieldList.add(index - 1, dataField)
-                    fireTableRowsUpdated(index - 1, index)
-                    return index - 1
-                }
-                return -1
-            }
-            
-            fun moveDown(index : Int) : Int {
-                if (index > rowCount - 1) {
-                    val dataField = dataFieldList[index]
-                    dataFieldList.removeAt(index)
-                    dataFieldList.add(index + 1, dataField)
-                    fireTableRowsUpdated(index, index + 1)
-                    return index + 1
-                }
-                return -1
             }
             
             fun getSelectDataField(row : Int) : DataField {

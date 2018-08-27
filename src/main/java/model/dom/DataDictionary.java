@@ -6,30 +6,25 @@ package model.dom;
 import com.intellij.util.xml.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * http://www.dmg.org/PMML-4_3:DataDictionaryElemType interface.
  */
+@NameStrategy(JavaNameStrategy.class)
 public interface DataDictionary extends DomElement {
-	@NotNull
-	GenericAttributeValue<Integer> getNumberOfFields();
+    @NotNull
+    GenericAttributeValue<Integer> getNumberOfFields();
 
-	@NotNull
-	java.util.List<Extension> getExtensions();
-	/**
-	 * Adds new child to the list of Extension children.
-	 * @return created child
-	 */
-	Extension addExtension();
+    @NotNull
+    List<Extension> getExtensions();
 
-	@NotNull
-	@Required
-	@SubTagList("DataField")
-	java.util.List<DataField> getDataFields();
-	/**
-	 * Adds new child to the list of DataField children.
-	 * @return created child
-	 */
-	@SubTag("DataField")
-	DataField addDataField();
+    Extension addExtension();
 
+    @NotNull
+    @Required
+    List<DataField> getDataFields();
+
+    @SubTag("DataField")
+    DataField addDataField();
 }

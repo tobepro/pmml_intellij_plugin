@@ -5,19 +5,19 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.layout.panel
-import enums.DataFieldTypeEnum
-import model.DataField
+import model.FieldDialog
+import model.dom.enums.DataType
 import javax.swing.JComponent
 import javax.swing.JLabel
 
 class FieldCreateDialog : DialogWrapper(true) {
-    private val myDataField = DataField("", DataFieldTypeEnum.DOUBLE, arrayListOf())
+    private var myFieldData = FieldDialog("", DataType.DOUBLE)
     private val myNameText = JBTextField(1)
-    private val myComboBox = ComboBox(DataFieldTypeEnum.values())
+    private val myComboBox = ComboBox(DataType.values())
 
     init {
         title = "添加字段"
-        myComboBox.selectedItem = DataFieldTypeEnum.DOUBLE
+        myComboBox.selectedItem = DataType.DOUBLE
         setResizable(false)
         init()
     }
@@ -50,9 +50,9 @@ class FieldCreateDialog : DialogWrapper(true) {
 
     override fun doOKAction() {
         close(OK_EXIT_CODE)
-        myDataField.apply {
+        myFieldData.apply { 
             name = myNameText.text
-            type = myComboBox.selectedItem as DataFieldTypeEnum
+            dataType = myComboBox.selectedItem as DataType
         }
     }
 
@@ -64,8 +64,8 @@ class FieldCreateDialog : DialogWrapper(true) {
         return !Strings.isNullOrEmpty(myNameText.text)
     }
 
-    fun getDataField(): DataField {
-        return myDataField
+    fun getDataField(): FieldDialog {
+        return myFieldData
     }
 
     private fun updateOKButton() {

@@ -61,6 +61,9 @@ public interface Attribute extends DomElement {
 	@SubTag("SimplePredicate")
 	SimplePredicate getSimplePredicate();
 
+	@SubTag("SimplePredicate")
+	SimplePredicate addSimplePredicate();
+
 
 	/**
 	 * Returns the value of the CompoundPredicate child.
@@ -70,6 +73,9 @@ public interface Attribute extends DomElement {
 	@Required
 	@SubTag("CompoundPredicate")
 	CompoundPredicate getCompoundPredicate();
+
+	@SubTag("CompoundPredicate")
+	CompoundPredicate addCompoundPredicate();
 
 
 	/**
@@ -81,6 +87,8 @@ public interface Attribute extends DomElement {
 	@SubTag("SimpleSetPredicate")
 	SimpleSetPredicate getSimpleSetPredicate();
 
+	@SubTag("SimpleSetPredicate")
+	SimpleSetPredicate addSimpleSetPredicate();
 
 	/**
 	 * Returns the value of the True child.
