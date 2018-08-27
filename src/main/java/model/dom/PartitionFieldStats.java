@@ -5,9 +5,8 @@ package model.dom;
 
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import model.dom.enums.Weighted;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:PartitionFieldStatsElemType interface.

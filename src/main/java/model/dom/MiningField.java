@@ -5,6 +5,7 @@ package model.dom;
 
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import model.dom.enums.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +27,7 @@ public interface MiningField extends DomElement {
 	 * @return the value of the usageType child.
 	 */
 	@NotNull
-	GenericAttributeValue<FIELDUSAGETYPE> getUsageType();
+	GenericAttributeValue<FieldUsageType> getUsageType();
 
 
 	/**
@@ -50,7 +51,7 @@ public interface MiningField extends DomElement {
 	 * @return the value of the outliers child.
 	 */
 	@NotNull
-	GenericAttributeValue<OUTLIERTREATMENTMETHOD> getOutliers();
+	GenericAttributeValue<OutlierTreatmentMethod> getOutliers();
 
 
 	/**
@@ -82,7 +83,7 @@ public interface MiningField extends DomElement {
 	 * @return the value of the missingValueTreatment child.
 	 */
 	@NotNull
-	GenericAttributeValue<MISSINGVALUETREATMENTMETHOD> getMissingValueTreatment();
+	GenericAttributeValue<MissingValueTreatmentMethod> getMissingValueTreatment();
 
 
 	/**
@@ -90,7 +91,7 @@ public interface MiningField extends DomElement {
 	 * @return the value of the invalidValueTreatment child.
 	 */
 	@NotNull
-	GenericAttributeValue<INVALIDVALUETREATMENTMETHOD> getInvalidValueTreatment();
+	GenericAttributeValue<InvalidValueTreatmentMethod> getInvalidValueTreatment();
 
 
 	/**

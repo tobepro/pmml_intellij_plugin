@@ -5,6 +5,8 @@ package model.dom;
 
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import model.dom.enums.CastInteger;
+import model.dom.enums.Optype;
 import org.jetbrains.annotations.NotNull;
 
 /**

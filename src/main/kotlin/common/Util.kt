@@ -4,7 +4,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.ArrayUtil
 import enums.DataFieldTypeEnum
 import enums.OperatorEnum
-import model.dom.DataType
+import model.dom.enums.DataType
 
 object Util {
     private val logger = Logger.getInstance(Util::class.java)

@@ -18,6 +18,10 @@ import enums.DataFieldTypeEnum
 import model.Attribute
 import model.DataField
 import model.dom.*
+import model.dom.enums.DataType
+import model.dom.enums.FieldUsageType
+import model.dom.enums.InvalidValueTreatmentMethod
+import model.dom.enums.Optype
 import java.awt.FlowLayout
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
@@ -133,7 +137,7 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
 
             miningSchema.addMiningField().apply {
                 name.value = Constants.FINAL_SCORE_FIELD
-                usageType.value = FIELDUSAGETYPE.TARGET
+                usageType.value = FieldUsageType.TARGET
             }
         }
 
@@ -146,7 +150,7 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
             pmml.scorecard.apply {
                 miningSchema.addMiningField().apply {
                     name.value = field.name
-                    invalidValueTreatment.value = INVALIDVALUETREATMENTMETHOD.AS_MISSING
+                    invalidValueTreatment.value = InvalidValueTreatmentMethod.AS_MISSING
                 }
 
                 characteristics.addCharacteristic().apply {

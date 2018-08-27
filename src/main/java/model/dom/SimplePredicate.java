@@ -7,6 +7,7 @@ import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
+import model.dom.enums.Operator;
 import org.jetbrains.annotations.NotNull;
 
 /**

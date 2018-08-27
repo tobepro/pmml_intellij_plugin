@@ -5,6 +5,7 @@ package model.dom;
 
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.DomElement;
+import model.dom.enums.BooleanOperator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

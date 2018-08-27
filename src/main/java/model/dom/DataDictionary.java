@@ -10,19 +10,9 @@ import org.jetbrains.annotations.NotNull;
  * http://www.dmg.org/PMML-4_3:DataDictionaryElemType interface.
  */
 public interface DataDictionary extends DomElement {
-
-	/**
-	 * Returns the value of the numberOfFields child.
-	 * @return the value of the numberOfFields child.
-	 */
 	@NotNull
 	GenericAttributeValue<Integer> getNumberOfFields();
 
-
-	/**
-	 * Returns the list of Extension children.
-	 * @return the list of Extension children.
-	 */
 	@NotNull
 	java.util.List<Extension> getExtensions();
 	/**
@@ -31,11 +21,6 @@ public interface DataDictionary extends DomElement {
 	 */
 	Extension addExtension();
 
-
-	/**
-	 * Returns the list of DataField children.
-	 * @return the list of DataField children.
-	 */
 	@NotNull
 	@Required
 	@SubTagList("DataField")
@@ -46,19 +31,5 @@ public interface DataDictionary extends DomElement {
 	 */
 	@SubTag("DataField")
 	DataField addDataField();
-
-
-	/**
-	 * Returns the list of Taxonomy children.
-	 * @return the list of Taxonomy children.
-	 */
-	@NotNull
-	java.util.List<Taxonomy> getTaxonomies();
-	/**
-	 * Adds new child to the list of Taxonomy children.
-	 * @return created child
-	 */
-	Taxonomy addTaxonomy();
-
 
 }

@@ -4,6 +4,7 @@
 package model.dom;
 
 import com.intellij.util.xml.*;
+import model.dom.enums.BooleanOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**

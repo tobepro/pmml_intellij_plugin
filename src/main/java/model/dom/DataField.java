@@ -6,6 +6,8 @@ package model.dom;
 import com.intellij.util.xml.*;
 import com.intellij.util.xml.Attribute;
 import com.intellij.util.xml.DomElement;
+import model.dom.enums.DataType;
+import model.dom.enums.Optype;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -56,15 +58,6 @@ public interface DataField extends DomElement {
 	 */
 	@NotNull
 	GenericAttributeValue<String> getTaxonomy();
-
-
-	/**
-	 * Returns the value of the isCyclic child.
-	 * @return the value of the isCyclic child.
-	 */
-	@NotNull
-	GenericAttributeValue<IsCyclic> getIsCyclic();
-
 
 	/**
 	 * Returns the list of Extension children.

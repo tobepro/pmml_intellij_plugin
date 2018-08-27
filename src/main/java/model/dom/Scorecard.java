@@ -7,6 +7,9 @@ import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import com.intellij.util.xml.SubTag;
+import model.dom.enums.BaselineMethod;
+import model.dom.enums.MiningFunction;
+import model.dom.enums.ReasonCodeAlgorithm;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,7 +31,7 @@ public interface Scorecard extends DomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<MININGFUNCTION> getFunctionName();
+	GenericAttributeValue<MiningFunction> getFunctionName();
 
 
 	/**
@@ -117,38 +120,12 @@ public interface Scorecard extends DomElement {
 	@NotNull
 	Output getOutput();
 
-
-	/**
-	 * Returns the value of the ModelStats child.
-	 * @return the value of the ModelStats child.
-	 */
-	@NotNull
-	ModelStats getModelStats();
-
-
-	/**
-	 * Returns the value of the ModelExplanation child.
-	 * @return the value of the ModelExplanation child.
-	 */
-	@NotNull
-	ModelExplanation getModelExplanation();
-
-
 	/**
 	 * Returns the value of the Targets child.
 	 * @return the value of the Targets child.
 	 */
 	@NotNull
 	Targets getTargets();
-
-
-	/**
-	 * Returns the value of the LocalTransformations child.
-	 * @return the value of the LocalTransformations child.
-	 */
-	@NotNull
-	LocalTransformations getLocalTransformations();
-
 
 	/**
 	 * Returns the value of the Characteristics child.
@@ -158,14 +135,4 @@ public interface Scorecard extends DomElement {
 	@Required
 	@SubTag("Characteristics")
 	Characteristics getCharacteristics();
-
-
-	/**
-	 * Returns the value of the ModelVerification child.
-	 * @return the value of the ModelVerification child.
-	 */
-	@NotNull
-	ModelVerification getModelVerification();
-
-
 }
