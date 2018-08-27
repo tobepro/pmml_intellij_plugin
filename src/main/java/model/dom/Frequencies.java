@@ -3,15 +3,14 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.NameStrategy;
+import common.MyNameStrategy;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:FrequenciesType model group interface.
  */
+@NameStrategy(MyNameStrategy.class)
 public interface Frequencies {
 
 	@NotNull

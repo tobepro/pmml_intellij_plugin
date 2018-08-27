@@ -3,9 +3,9 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.DataType;
 import model.dom.enums.Optype;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * http://www.dmg.org/PMML-4_3:DataFieldElemType interface.
  */
-public interface DataField extends DomElement {
+public interface DataField extends MyDomElement {
 
 	/**
 	 * Returns the value of the name child.
@@ -38,7 +38,6 @@ public interface DataField extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@Attribute("optype")
 	GenericAttributeValue<Optype> getOptype();
 
 
@@ -48,7 +47,6 @@ public interface DataField extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@Attribute("dataType")
 	GenericAttributeValue<DataType> getDataType();
 
 

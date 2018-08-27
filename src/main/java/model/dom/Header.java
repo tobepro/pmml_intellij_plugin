@@ -3,16 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.GenericDomValue;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:HeaderElemType interface.
  */
-public interface Header extends DomElement {
+public interface Header extends MyDomElement {
 
 	/**
 	 * Returns the value of the copyright child.

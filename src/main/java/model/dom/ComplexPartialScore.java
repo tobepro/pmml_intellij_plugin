@@ -3,14 +3,10 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import common.MyDomElement;
 
 /**
  * http://www.dmg.org/PMML-4_3:ComplexPartialScoreElemType interface.
  */
-public interface ComplexPartialScore extends DomElement {
+public interface ComplexPartialScore extends MyDomElement {
 }

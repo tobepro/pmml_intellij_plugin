@@ -23,8 +23,9 @@ public interface DataDictionary extends DomElement {
 
     @NotNull
     @Required
+    @SubTagList("DataField")
     List<DataField> getDataFields();
 
-    @SubTag("DataField")
+    @SubTagList("DataField")
     DataField addDataField();
 }

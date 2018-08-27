@@ -3,15 +3,16 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
 import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:ExtensionElemType interface.
  */
-public interface Extension extends DomElement {
+public interface Extension extends MyDomElement {
 
 	/**
 	 * Returns the value of the simple content.

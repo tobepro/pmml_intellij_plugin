@@ -3,12 +3,10 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
-import org.jetbrains.annotations.NotNull;
+import common.MyDomElement;
 
 /**
  * http://www.dmg.org/PMML-4_3:OutputFieldElemType interface.
  */
-public interface OutputField extends DomElement {
+public interface OutputField extends MyDomElement {
 }

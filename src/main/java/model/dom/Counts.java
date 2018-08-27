@@ -3,16 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:CountsElemType interface.
  */
-public interface Counts extends DomElement {
+public interface Counts extends MyDomElement {
 
 	/**
 	 * Returns the value of the totalFreq child.

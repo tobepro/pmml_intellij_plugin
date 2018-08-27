@@ -3,16 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:PartitionElemType interface.
  */
-public interface Partition extends DomElement {
+public interface Partition extends MyDomElement {
 
 	/**
 	 * Returns the value of the name child.

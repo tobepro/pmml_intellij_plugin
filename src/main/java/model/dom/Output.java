@@ -3,16 +3,14 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:OutputElemType interface.
  */
-public interface Output extends DomElement {
+public interface Output extends MyDomElement {
 
 	/**
 	 * Returns the list of Extension children.

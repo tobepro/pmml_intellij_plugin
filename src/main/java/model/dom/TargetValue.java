@@ -3,16 +3,14 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:TargetValueElemType interface.
  */
-public interface TargetValue extends DomElement {
+public interface TargetValue extends MyDomElement {
 
 	/**
 	 * Returns the value of the value child.

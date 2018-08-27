@@ -3,17 +3,16 @@
 
 package model.dom;
 
-import com.intellij.util.xml.Attribute;
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.Operator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:SimplePredicateElemType interface.
  */
-public interface SimplePredicate extends DomElement {
+public interface SimplePredicate extends MyDomElement {
 
 	/**
 	 * Returns the value of the dataField child.
@@ -38,7 +37,6 @@ public interface SimplePredicate extends DomElement {
 	 * @return the value of the value child.
 	 */
 	@NotNull
-	@Attribute("value")
 	GenericAttributeValue<String> getValue();
 
 
@@ -53,6 +51,4 @@ public interface SimplePredicate extends DomElement {
 	 * @return created child
 	 */
 	Extension addExtension();
-
-
 }

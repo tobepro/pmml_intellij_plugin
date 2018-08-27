@@ -3,15 +3,16 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.Property;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:ValueElemType interface.
  */
-public interface Value extends DomElement {
+public interface Value extends MyDomElement {
 
 	/**
 	 * Returns the value of the value child.

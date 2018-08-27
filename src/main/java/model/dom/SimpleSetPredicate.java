@@ -3,7 +3,9 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.BooleanOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * http://www.dmg.org/PMML-4_3:SimpleSetPredicateElemType interface.
  */
-public interface SimpleSetPredicate extends DomElement {
+public interface SimpleSetPredicate extends MyDomElement {
 
 	/**
 	 * Returns the value of the dataField child.
@@ -51,9 +53,7 @@ public interface SimpleSetPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTagList("Array")
 	List<Array> getArrays();
 
-	@SubTag("Array")
 	Array addArray();
 }

@@ -17,10 +17,7 @@ import enums.OperatorEnum
 import model.Attribute
 import model.dom.DataField
 import model.dom.PMML
-import model.dom.enums.BooleanOperator
 import model.dom.enums.DataType
-import model.dom.enums.Operator
-import model.dom.enums.Type
 import java.awt.FlowLayout
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
@@ -132,55 +129,55 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
     }
 
     private fun saveAttrsByName(name: String, attrs: List<Attribute>) {
-        val fieldType = pmml.dataDictionary.dataFields.first { it.name.value == name }.dataType.value
-        pmml.scorecard.characteristics.characteristics.first { it.name.value == name }.undefine()
-        pmml.scorecard
-                .characteristics
-                .addCharacteristic()
-                .apply {
-            this.name.value = name
-            reasonCode.value = name
-            baselineScore.value = 0.0
-            attrs.forEach { attr ->
-                addAttribute().let { a ->
-                    a.partialScore.value = attr.score
-                    when {
-                        attr.operator in arrayOf(OperatorEnum.IS_IN, OperatorEnum.IS_NOT_IN) ->
-                            a.addSimpleSetPredicate().apply {
-                                dataField.value = name
-                                booleanOperator.value = BooleanOperator.valueOf(attr.operator.toString())
-                                attr.operatorValue.split(",").forEach { v ->
-                                    addArray().apply {
-                                        type.value = when (fieldType) {
-                                            DataType.DOUBLE -> Type.REAL
-                                            DataType.INTEGER -> Type.INT
-                                            DataType.STRING -> Type.STRING
-                                            else -> Type.STRING
-                                        }
-                                        value = v
-                                    }
-                                }
-                            }
-                        attr.operator.type.size == 1 ->
-                            a.addSimplePredicate().apply {
-                                dataField.value = name
-                                operator.value = Operator.valueOf(attr.operator.type[0].toString())
-                                value.value = attr.operatorValue
-                            }
-                        else ->
-                            a.addCompoundPredicate().apply {
-                                attr.operator.type.forEachIndexed { index, opType ->
-                                    addSimplePredicate().apply {
-                                        dataField.value = name
-                                        operator.value = Operator.valueOf(opType.toString())
-                                        value.value = attr.operatorValue.split(",")[index]
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
-        }
+//        val fieldType = pmml.dataDictionary.dataFields.first { it.name.value == name }.dataType.value
+//        pmml.scorecard.characteristics.characteristics.first { it.name.value == name }.undefine()
+//        pmml.scorecard
+//                .characteristics
+//                .addCharacteristic()
+//                .apply {
+//            this.name.value = name
+//            reasonCode.value = name
+//            baselineScore.value = 0.0
+//            attrs.forEach { attr ->
+//                addAttribute().let { a ->
+//                    a.partialScore.value = attr.score
+//                    when {
+//                        attr.operator in arrayOf(OperatorEnum.IS_IN, OperatorEnum.IS_NOT_IN) ->
+//                            a.addSimpleSetPredicate().apply {
+//                                dataField.value = name
+//                                booleanOperator.value = BooleanOperator.valueOf(attr.operator.toString())
+//                                attr.operatorValue.split(",").forEach { v ->
+//                                    addArray().apply {
+//                                        type.value = when (fieldType) {
+//                                            DataType.DOUBLE -> Type.REAL
+//                                            DataType.INTEGER -> Type.INT
+//                                            DataType.STRING -> Type.STRING
+//                                            else -> Type.STRING
+//                                        }
+//                                        value = v
+//                                    }
+//                                }
+//                            }
+//                        attr.operator.type.size == 1 ->
+//                            a.addSimplePredicate().apply {
+//                                dataField.value = name
+//                                operator.value = Operator.valueOf(attr.operator.type[0].toString())
+//                                value.value = attr.operatorValue
+//                            }
+//                        else ->
+//                            a.addCompoundPredicate().apply {
+//                                attr.operator.type.forEachIndexed { index, opType ->
+//                                    addSimplePredicate().apply {
+//                                        dataField.value = name
+//                                        operator.value = Operator.valueOf(opType.toString())
+//                                        value.value = attr.operatorValue.split(",")[index]
+//                                    }
+//                                }
+//                            }
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun getData(dataId: String?): Any? {

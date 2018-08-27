@@ -3,16 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTag;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:AttributeElemType interface.
  */
-public interface Attribute extends DomElement {
+public interface Attribute extends MyDomElement {
 
 	/**
 	 * Returns the value of the reasonCode child.
@@ -27,7 +26,6 @@ public interface Attribute extends DomElement {
 	 * @return the value of the partialScore child.
 	 */
 	@NotNull
-	@com.intellij.util.xml.Attribute("partialScore")
 	GenericAttributeValue<Double> getPartialScore();
 
 
@@ -58,10 +56,8 @@ public interface Attribute extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTag("SimplePredicate")
 	SimplePredicate getSimplePredicate();
 
-	@SubTag("SimplePredicate")
 	SimplePredicate addSimplePredicate();
 
 
@@ -71,10 +67,8 @@ public interface Attribute extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTag("CompoundPredicate")
 	CompoundPredicate getCompoundPredicate();
 
-	@SubTag("CompoundPredicate")
 	CompoundPredicate addCompoundPredicate();
 
 
@@ -84,10 +78,8 @@ public interface Attribute extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTag("SimpleSetPredicate")
 	SimpleSetPredicate getSimpleSetPredicate();
 
-	@SubTag("SimpleSetPredicate")
 	SimpleSetPredicate addSimpleSetPredicate();
 
 	/**

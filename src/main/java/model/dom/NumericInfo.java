@@ -3,16 +3,14 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:NumericInfoElemType interface.
  */
-public interface NumericInfo extends DomElement {
+public interface NumericInfo extends MyDomElement {
 
 	/**
 	 * Returns the value of the minimum child.

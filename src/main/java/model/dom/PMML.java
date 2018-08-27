@@ -3,16 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.DomElement;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
-import com.intellij.util.xml.SubTag;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:PMMLElemType interface.
  */
-public interface PMML extends DomElement {
+public interface PMML extends MyDomElement {
 
 	@NotNull
 	@Required
@@ -24,7 +23,6 @@ public interface PMML extends DomElement {
 
 	@NotNull
 	@Required
-	@SubTag("DataDictionary")
 	DataDictionary getDataDictionary();
 	
 	@NotNull
@@ -34,6 +32,5 @@ public interface PMML extends DomElement {
 	
 	@NotNull
 	@Required
-	@SubTag("Scorecard")
 	Scorecard getScorecard();
 }

@@ -3,16 +3,13 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:FalseElemType interface.
  */
-public interface False extends DomElement {
+public interface False extends MyDomElement {
 
 	/**
 	 * Returns the list of Extension children.

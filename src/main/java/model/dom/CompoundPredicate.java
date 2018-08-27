@@ -3,8 +3,9 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.BooleanOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * http://www.dmg.org/PMML-4_3:CompoundPredicateElemType interface.
  */
-public interface CompoundPredicate extends DomElement {
+public interface CompoundPredicate extends MyDomElement {
 
 	/**
 	 * Returns the value of the booleanOperator child.
@@ -43,10 +44,8 @@ public interface CompoundPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTagList("SimplePredicate")
 	List<SimplePredicate> getSimplePredicates();
 	
-	@SubTag("SimplePredicate")
 	SimplePredicate addSimplePredicate();
 
 
@@ -65,7 +64,6 @@ public interface CompoundPredicate extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTag("SimpleSetPredicate")
 	SimpleSetPredicate getSimpleSetPredicate();
 
 

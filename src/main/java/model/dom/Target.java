@@ -3,8 +3,8 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import common.MyDomElement;
 import model.dom.enums.CastInteger;
 import model.dom.enums.Optype;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * http://www.dmg.org/PMML-4_3:TargetElemType interface.
  */
-public interface Target extends DomElement {
+public interface Target extends MyDomElement {
 
 	/**
 	 * Returns the value of the dataField child.

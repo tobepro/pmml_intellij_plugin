@@ -3,15 +3,16 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.Weighted;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:PartitionFieldStatsElemType interface.
  */
-public interface PartitionFieldStats extends DomElement, Frequencies {
+public interface PartitionFieldStats extends MyDomElement, Frequencies {
 
 	/**
 	 * Returns the value of the dataField child.

@@ -3,13 +3,15 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:CharacteristicElemType interface.
  */
-public interface Characteristic extends DomElement {
+public interface Characteristic extends MyDomElement {
 
 	/**
 	 * Returns the value of the name child.
@@ -54,13 +56,11 @@ public interface Characteristic extends DomElement {
 	 */
 	@NotNull
 	@Required
-	@SubTagList("Attribute")
 	java.util.List<Attribute> getAttributes();
 	/**
 	 * Adds new child to the list of Attribute children.
 	 * @return created child
 	 */
-	@SubTag("Attribute")
 	Attribute addAttribute();
 
 

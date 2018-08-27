@@ -3,15 +3,16 @@
 
 package model.dom;
 
-import com.intellij.util.xml.*;
-import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.GenericAttributeValue;
+import com.intellij.util.xml.Required;
+import common.MyDomElement;
 import model.dom.enums.Closure;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.dmg.org/PMML-4_3:IntervalElemType interface.
  */
-public interface Interval extends DomElement {
+public interface Interval extends MyDomElement {
 
 	/**
 	 * Returns the value of the closure child.
