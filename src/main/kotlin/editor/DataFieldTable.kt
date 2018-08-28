@@ -150,9 +150,9 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
                             
                             dataFieldList = dic.dataFields
                         }
+                        fireTableRowsInserted(dataFieldList.size -1, dataFieldList.size - 1)
                     }
                 }
-                fireTableRowsInserted(dataFieldList.size -1, dataFieldList.size - 1)
             }
         }
         

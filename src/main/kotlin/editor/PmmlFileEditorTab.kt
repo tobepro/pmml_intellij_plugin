@@ -59,6 +59,9 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
             ""
         }
         
+        scorecardName.text = pmml.scorecard.modelName.value
+        initScoreText.text = pmml.scorecard.initialScore.toString()
+        
         detailTable = FieldDetailTable(type, characteristics.firstOrNull { it.name.value == name }, writeAction)
 
         // 添加工具栏

@@ -52,7 +52,7 @@ class FieldCreateDialog : DialogWrapper(true) {
         close(OK_EXIT_CODE)
         myFieldData.apply { 
             name = myNameText.text
-            dataType = myComboBox.selectedItem as DataType
+            dataType = DataType.values().first{ it.value == myComboBox.selectedItem.toString() }
         }
     }
 
