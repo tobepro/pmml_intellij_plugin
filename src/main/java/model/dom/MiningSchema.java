@@ -30,7 +30,6 @@ public interface MiningSchema extends MyDomElement {
 	 * @return the list of MiningField children.
 	 */
 	@NotNull
-	@Required
 	java.util.List<MiningField> getMiningFields();
 	/**
 	 * Adds new child to the list of MiningField children.

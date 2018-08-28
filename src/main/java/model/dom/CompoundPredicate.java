@@ -6,7 +6,7 @@ package model.dom;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import common.MyDomElement;
-import model.dom.enums.BooleanOperator;
+import model.dom.enums.CompoundBooleanOperator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface CompoundPredicate extends MyDomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<BooleanOperator> getBooleanOperator();
+	GenericAttributeValue<CompoundBooleanOperator> getBooleanOperator();
 
 
 	/**
@@ -50,29 +50,10 @@ public interface CompoundPredicate extends MyDomElement {
 
 
 	/**
-	 * Returns the value of the CompoundPredicate child.
-	 * @return the value of the CompoundPredicate child.
-	 */
-	@NotNull
-	@Required
-	CompoundPredicate getCompoundPredicate();
-
-
-	/**
-	 * Returns the value of the SimpleSetPredicate child.
-	 * @return the value of the SimpleSetPredicate child.
-	 */
-	@NotNull
-	@Required
-	SimpleSetPredicate getSimpleSetPredicate();
-
-
-	/**
 	 * Returns the value of the True child.
 	 * @return the value of the True child.
 	 */
 	@NotNull
-	@Required
 	True getTrue();
 
 
@@ -81,7 +62,6 @@ public interface CompoundPredicate extends MyDomElement {
 	 * @return the value of the False child.
 	 */
 	@NotNull
-	@Required
 	False getFalse();
 
 

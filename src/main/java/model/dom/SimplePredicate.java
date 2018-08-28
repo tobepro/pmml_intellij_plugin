@@ -20,7 +20,7 @@ public interface SimplePredicate extends MyDomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<String> getDataField();
+	GenericAttributeValue<String> getField();
 
 
 	/**

@@ -1,5 +1,6 @@
 package editor
 
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.ui.ComboBoxTableRenderer
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
@@ -7,13 +8,15 @@ import model.dom.DataDictionary
 import model.dom.DataField
 import model.dom.PMML
 import model.dom.enums.DataType
+import model.dom.enums.InvalidValueTreatmentMethod
+import model.dom.enums.Optype
 import java.awt.Component
 import javax.swing.JTable
 import javax.swing.ListSelectionModel
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
-class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
+class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builder) : JBTable(ModelAdapter(dic, writeAction)) {
     init {
         autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -49,8 +52,8 @@ class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
         const val NAME_COLUMN = 0
         const val DATA_TYPE_COLUMN = 1
         
-        class ModelAdapter(private val dic : DataDictionary) : AbstractTableModel(),EditableModel {
-            private val dataFieldList = dic.dataFields as MutableList
+        class ModelAdapter(private val dic: DataDictionary, private val writeAction: WriteCommandAction.Builder) : AbstractTableModel(),EditableModel {
+            private var dataFieldList = dic.dataFields
             
             override fun getColumnName(column: Int): String {
                 return if (column == NAME_COLUMN) "字段名" else "数据类型"
@@ -76,19 +79,29 @@ class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
             }
 
             override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
-                when(columnIndex) {
-                    NAME_COLUMN -> {
-                        dataFieldList[rowIndex].name.value = aValue as String
-                    }
-                    DATA_TYPE_COLUMN -> {
-                        dataFieldList[rowIndex].dataType.value = aValue as DataType
+                writeAction.run<Exception> {
+                    when(columnIndex) {
+                        NAME_COLUMN -> {
+                            dataFieldList[rowIndex].name.value = aValue as String
+                        }
+                        DATA_TYPE_COLUMN -> {
+                            dataFieldList[rowIndex].dataType.value = aValue as DataType
+                        }
                     }
                 }
                 fireTableCellUpdated(rowIndex, columnIndex)
             }
 
             override fun removeRow(idx: Int) {
-                dataFieldList[idx].undefine()
+                writeAction.run<Exception> {
+                    val name = dic.dataFields[idx].name.value
+                    dic.dataFields[idx].undefine()
+                    dataFieldList = dic.dataFields
+                    
+                    val pmml = dic.parent as PMML
+                    pmml.scorecard.miningSchema.miningFields.firstOrNull{ it.name.value == name }?.undefine()
+                    pmml.scorecard.characteristics.characteristics.firstOrNull { it.name.value == name }?.undefine()
+                }
                 fireTableRowsDeleted(idx, idx)
             }
 
@@ -98,7 +111,7 @@ class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
             }
 
             override fun canExchangeRows(oldIndex: Int, newIndex: Int): Boolean {
-                return true
+                return false
             }
 
             override fun getColumnClass(columnIndex: Int): Class<*> {
@@ -106,7 +119,7 @@ class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-                return columnIndex == DATA_TYPE_COLUMN
+                return false
             }
 
             override fun addRow() {
@@ -114,16 +127,32 @@ class DataFieldTable(dic: DataDictionary) : JBTable(ModelAdapter(dic)) {
                     show()
                     if (exitCode == 0) {
                         val fieldDialog = getDataField()
-                        dic.addDataField().apply { 
-                            name.value = fieldDialog.name
-                            dataType.value = fieldDialog.dataType
+                        writeAction.run<Exception> {
+                            val pmml = dic.parent as PMML
+                            dic.addDataField().apply {
+                                name.value = fieldDialog.name
+                                dataType.value = fieldDialog.dataType
+                                optype.value = when (fieldDialog.dataType) {
+                                    DataType.STRING -> Optype.CATEGORICAL
+                                    DataType.DOUBLE,DataType.INTEGER -> Optype.CONTINUOUS
+                                    else -> Optype.CATEGORICAL
+                                }
+                            }
+                            pmml.scorecard.characteristics.addCharacteristic().apply { 
+                                name.value = fieldDialog.name
+                                reasonCode.value = fieldDialog.name
+                                baselineScore.value = 0.0
+                            }
+                            pmml.scorecard.miningSchema.addMiningField().apply { 
+                                name.value = fieldDialog.name
+                                invalidValueTreatment.value = InvalidValueTreatmentMethod.AS_MISSING
+                            }
+                            
+                            dataFieldList = dic.dataFields
                         }
                     }
                 }
-            }
-            
-            fun getSelectDataField(row : Int) : DataField {
-                return dataFieldList[row]
+                fireTableRowsInserted(dataFieldList.size -1, dataFieldList.size - 1)
             }
         }
         

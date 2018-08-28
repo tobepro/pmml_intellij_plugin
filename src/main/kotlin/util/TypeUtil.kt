@@ -1,12 +1,12 @@
-package common
+package util
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.ArrayUtil
 import enums.OperatorEnum
-import model.dom.enums.DataType
+import java.util.*
 
-object Util {
-    private val logger = Logger.getInstance(Util::class.java)
+object TypeUtil {
+    private val logger = Logger.getInstance(TypeUtil::class.java)
     fun getOperatorType(op : Array<String>) : OperatorEnum {
         return OperatorEnum.values().first { ArrayUtil.equals(it.operator.sortedArray(), op.sortedArray(), String::equals) }
     }

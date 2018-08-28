@@ -6,12 +6,14 @@ package model.dom.enums;
 /**
  * http://www.dmg.org/PMML-4_3:booleanOperatorAttrType enumeration.
  */
-public enum BooleanOperator implements com.intellij.util.xml.NamedEnum {
-	IS_IN ("isIn"),
-	IS_NOT_IN ("isNotIn");
+public enum CompoundBooleanOperator implements com.intellij.util.xml.NamedEnum {
+	OR ("or"),
+	AND ("and"),
+	XOR ("xor"),
+	SURROGATE ("surrogate");
 
 	private final String value;
-	private BooleanOperator(String value) { this.value = value; }
+	private CompoundBooleanOperator(String value) { this.value = value; }
 	public String getValue() { return value; }
 
 }

@@ -1,0 +1,14 @@
+<PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3">
+    <Header description="scorecard"/>
+    <DataDictionary>
+        <DataField name="finalScore" optype="continuous" dataType="double"/>
+    </DataDictionary>
+    <Scorecard modelName="test" functionName="regression" initialScore="0"
+               reasonCodeAlgorithm="pointsAbove">
+        <MiningSchema>
+            <MiningField name="finalScore" usageType="target"/>
+        </MiningSchema>
+        <Characteristics>
+        </Characteristics>
+    </Scorecard>
+</PMML>

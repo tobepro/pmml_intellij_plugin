@@ -6,10 +6,8 @@ package model.dom;
 import com.intellij.util.xml.GenericAttributeValue;
 import com.intellij.util.xml.Required;
 import common.MyDomElement;
-import model.dom.enums.BooleanOperator;
+import model.dom.enums.SimpleBooleanOperator;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * http://www.dmg.org/PMML-4_3:SimpleSetPredicateElemType interface.
@@ -22,7 +20,7 @@ public interface SimpleSetPredicate extends MyDomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<String> getDataField();
+	GenericAttributeValue<String> getField();
 
 
 	/**
@@ -31,7 +29,7 @@ public interface SimpleSetPredicate extends MyDomElement {
 	 */
 	@NotNull
 	@Required
-	GenericAttributeValue<BooleanOperator> getBooleanOperator();
+	GenericAttributeValue<SimpleBooleanOperator> getBooleanOperator();
 
 
 	/**
@@ -53,7 +51,5 @@ public interface SimpleSetPredicate extends MyDomElement {
 	 */
 	@NotNull
 	@Required
-	List<Array> getArrays();
-
-	Array addArray();
+	Array getArray();
 }

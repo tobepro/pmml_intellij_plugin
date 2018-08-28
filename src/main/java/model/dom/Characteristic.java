@@ -55,7 +55,6 @@ public interface Characteristic extends MyDomElement {
 	 * @return the list of Attribute children.
 	 */
 	@NotNull
-	@Required
 	java.util.List<Attribute> getAttributes();
 	/**
 	 * Adds new child to the list of Attribute children.

@@ -13,7 +13,7 @@ import javax.swing.JLabel
 class FieldCreateDialog : DialogWrapper(true) {
     private var myFieldData = FieldDialog("", DataType.DOUBLE)
     private val myNameText = JBTextField(1)
-    private val myComboBox = ComboBox(DataType.values())
+    private val myComboBox = ComboBox(DataType.values().map { it.value }.toTypedArray())
 
     init {
         title = "添加字段"

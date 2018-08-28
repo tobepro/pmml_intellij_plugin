@@ -26,6 +26,7 @@ public interface Attribute extends MyDomElement {
 	 * @return the value of the partialScore child.
 	 */
 	@NotNull
+	@Required
 	GenericAttributeValue<Double> getPartialScore();
 
 
@@ -55,21 +56,14 @@ public interface Attribute extends MyDomElement {
 	 * @return the value of the SimplePredicate child.
 	 */
 	@NotNull
-	@Required
 	SimplePredicate getSimplePredicate();
-
-	SimplePredicate addSimplePredicate();
-
 
 	/**
 	 * Returns the value of the CompoundPredicate child.
 	 * @return the value of the CompoundPredicate child.
 	 */
 	@NotNull
-	@Required
 	CompoundPredicate getCompoundPredicate();
-
-	CompoundPredicate addCompoundPredicate();
 
 
 	/**
@@ -77,17 +71,13 @@ public interface Attribute extends MyDomElement {
 	 * @return the value of the SimpleSetPredicate child.
 	 */
 	@NotNull
-	@Required
 	SimpleSetPredicate getSimpleSetPredicate();
-
-	SimpleSetPredicate addSimpleSetPredicate();
 
 	/**
 	 * Returns the value of the True child.
 	 * @return the value of the True child.
 	 */
 	@NotNull
-	@Required
 	True getTrue();
 
 
@@ -96,7 +86,6 @@ public interface Attribute extends MyDomElement {
 	 * @return the value of the False child.
 	 */
 	@NotNull
-	@Required
 	False getFalse();
 
 
