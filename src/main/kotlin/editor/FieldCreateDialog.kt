@@ -9,23 +9,36 @@ import model.FieldDialog
 import model.dom.enums.DataType
 import javax.swing.JComponent
 import javax.swing.JLabel
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
 class FieldCreateDialog : DialogWrapper(true) {
     private var myFieldData = FieldDialog("", DataType.DOUBLE)
-    private val myNameText = JBTextField(1)
+    private val myNameText = JBTextField(2)
     private val myComboBox = ComboBox(DataType.values().map { it.value }.toTypedArray())
 
     init {
         title = "添加字段"
-        myComboBox.selectedItem = DataType.DOUBLE
-        setResizable(false)
+        isOKActionEnabled = false
+        myComboBox.selectedItem = DataType.DOUBLE.value
+        setResizable(true)
         init()
     }
 
     override fun createCenterPanel(): JComponent? {
-        myNameText.addActionListener { _ ->
-            updateOKButton()
-        }
+        myNameText.document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+
+            override fun insertUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+
+            override fun removeUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+        })
 
         val nameLabel = JLabel("字段名")
         nameLabel.labelFor = myNameText
@@ -60,15 +73,11 @@ class FieldCreateDialog : DialogWrapper(true) {
         return myNameText
     }
 
-    override fun isOKActionEnabled(): Boolean {
-        return !Strings.isNullOrEmpty(myNameText.text)
-    }
-
     fun getDataField(): FieldDialog {
         return myFieldData
     }
 
     private fun updateOKButton() {
-        okAction.isEnabled = isOKActionEnabled
+        okAction.isEnabled = !myNameText.text.isEmpty()
     }
 }

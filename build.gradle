@@ -35,7 +35,11 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      first init"""
+      <li>1.新增字段不能为空</li>
+      <li>2.新增页面可以调整大小</li>
+      <li>3.新增字段默认选择double</li>
+      """
+    version("1.0.1")
 }
 
 compileKotlin {
