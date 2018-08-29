@@ -5,7 +5,6 @@ import com.intellij.openapi.ui.ComboBoxTableRenderer
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
 import model.dom.DataDictionary
-import model.dom.DataField
 import model.dom.PMML
 import model.dom.enums.DataType
 import model.dom.enums.InvalidValueTreatmentMethod
@@ -18,9 +17,10 @@ import javax.swing.table.DefaultTableCellRenderer
 
 class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builder) : JBTable(ModelAdapter(dic, writeAction)) {
     init {
-        autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
+        autoResizeMode = JTable.AUTO_RESIZE_ALL_COLUMNS
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        
+        emptyText.text = "暂无数据"
+
         val columnModel = getColumnModel()
         val nameColumn = columnModel.getColumn(NAME_COLUMN)
         nameColumn.cellRenderer = NameRenderer()
@@ -35,29 +35,23 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
                 return value.value
             }
         }
-        emptyText.text = "暂无数据"
     }
 
-    override fun isCellEditable(row: Int, column: Int): Boolean {
-//        val dataField = model.getSelectDataField(row)
-//        return (selectedColumn == DATA_TYPE_COLUMN)
-        return false
-    }
-    
     override fun getModel(): ModelAdapter {
         return super.getModel() as ModelAdapter
     }
-    
+
     companion object {
         const val NAME_COLUMN = 0
         const val DATA_TYPE_COLUMN = 1
-        
-        class ModelAdapter(private val dic: DataDictionary, private val writeAction: WriteCommandAction.Builder) : AbstractTableModel(),EditableModel {
+
+        class ModelAdapter(private val dic: DataDictionary, private val writeAction: WriteCommandAction.Builder) : AbstractTableModel(), EditableModel {
             private var dataFieldList = dic.dataFields
-            
+
             override fun getColumnName(column: Int): String {
                 return if (column == NAME_COLUMN) "字段名" else "数据类型"
             }
+
             override fun getRowCount(): Int {
                 return dataFieldList.size
             }
@@ -80,9 +74,30 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
 
             override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
                 writeAction.run<Exception> {
-                    when(columnIndex) {
+                    when (columnIndex) {
                         NAME_COLUMN -> {
-                            dataFieldList[rowIndex].name.value = aValue as String
+                            val name = aValue as String
+                            val oldName = getValueAt(rowIndex, columnIndex) as String
+                            dataFieldList[rowIndex].name.value = name
+                            val pmml = dic.parent as PMML
+                            pmml.scorecard.miningSchema.miningFields.firstOrNull { it.name.value == oldName }?.name?.value = name
+                            val characteristic = pmml.scorecard.characteristics.characteristics.firstOrNull { it.name.value == oldName }
+                            characteristic?.apply {
+                                attributes.forEach { attr ->
+                                    if (attr.simplePredicate.exists()) {
+                                        attr.simplePredicate.field.value = name
+                                    }
+                                    if (attr.simpleSetPredicate.exists()) {
+                                        attr.simpleSetPredicate.field.value = name
+                                    }
+                                    if (attr.compoundPredicate.exists()) {
+                                        attr.compoundPredicate.simplePredicates.forEach {
+                                            it.field.value = name
+                                        }
+                                    }
+                                }
+                                this.name.value = name
+                            }
                         }
                         DATA_TYPE_COLUMN -> {
                             dataFieldList[rowIndex].dataType.value = aValue as DataType
@@ -97,9 +112,9 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
                     val name = dic.dataFields[idx].name.value
                     dic.dataFields[idx].undefine()
                     dataFieldList = dic.dataFields
-                    
+
                     val pmml = dic.parent as PMML
-                    pmml.scorecard.miningSchema.miningFields.firstOrNull{ it.name.value == name }?.undefine()
+                    pmml.scorecard.miningSchema.miningFields.firstOrNull { it.name.value == name }?.undefine()
                     pmml.scorecard.characteristics.characteristics.firstOrNull { it.name.value == name }?.undefine()
                 }
                 fireTableRowsDeleted(idx, idx)
@@ -119,11 +134,11 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-                return false
+                return NAME_COLUMN == columnIndex
             }
 
             override fun addRow() {
-                FieldCreateDialog().run { 
+                FieldCreateDialog().run {
                     show()
                     if (exitCode == 0) {
                         val fieldDialog = getDataField()
@@ -134,28 +149,28 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
                                 dataType.value = fieldDialog.dataType
                                 optype.value = when (fieldDialog.dataType) {
                                     DataType.STRING -> Optype.CATEGORICAL
-                                    DataType.DOUBLE,DataType.INTEGER -> Optype.CONTINUOUS
+                                    DataType.DOUBLE, DataType.INTEGER -> Optype.CONTINUOUS
                                     else -> Optype.CATEGORICAL
                                 }
                             }
-                            pmml.scorecard.characteristics.addCharacteristic().apply { 
+                            pmml.scorecard.characteristics.addCharacteristic().apply {
                                 name.value = fieldDialog.name
                                 reasonCode.value = fieldDialog.name
                                 baselineScore.value = 0.0
                             }
-                            pmml.scorecard.miningSchema.addMiningField().apply { 
+                            pmml.scorecard.miningSchema.addMiningField().apply {
                                 name.value = fieldDialog.name
                                 invalidValueTreatment.value = InvalidValueTreatmentMethod.AS_MISSING
                             }
-                            
+
                             dataFieldList = dic.dataFields
                         }
-                        fireTableRowsInserted(dataFieldList.size -1, dataFieldList.size - 1)
+                        fireTableRowsInserted(dataFieldList.size - 1, dataFieldList.size - 1)
                     }
                 }
             }
         }
-        
+
         private class NameRenderer : DefaultTableCellRenderer() {
             override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
                 return super.getTableCellRendererComponent(table, value, isSelected, false, row, column)

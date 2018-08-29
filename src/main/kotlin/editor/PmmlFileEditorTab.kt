@@ -19,7 +19,6 @@ import model.dom.DataField
 import model.dom.PMML
 import model.dom.enums.DataType
 import java.awt.FlowLayout
-import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
@@ -58,10 +57,10 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
         } else {
             ""
         }
-        
+
         scorecardName.text = pmml.scorecard.modelName.value
         initScoreText.text = pmml.scorecard.initialScore.toString()
-        
+
         detailTable = FieldDetailTable(type, characteristics.firstOrNull { it.name.value == name }, writeAction)
 
         // 添加工具栏
@@ -71,7 +70,7 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
         // 布局
         layout = FlowLayout(FlowLayout.LEFT)
         add(panel {
-            row("名称") { 
+            row("名称") {
                 scorecardName(grow, push)
             }
             row("初始分") {
@@ -90,15 +89,16 @@ class PmmlFileEditorTab(editor: PmmlFileEditor, project: Project, module: Module
 
             val rowNum = if (dataTable.selectedRow < 0) e.firstIndex else dataTable.selectedRow
             detailTable.updateRows(dataFieldList[rowNum].dataType.value!!, characteristics.firstOrNull { it.name.value == dataFieldList[rowNum].name.value!! })
+            detailTable.enable(dataFieldList[rowNum].name.value != Constants.FINAL_SCORE_FIELD)
         }
-        
+
         initScoreText.addActionListener {
             writeAction.run<Exception> {
                 pmml.scorecard.initialScore.value = initScoreText.text.toDouble()
             }
         }
         scorecardName.addActionListener {
-            writeAction.run<Exception> { 
+            writeAction.run<Exception> {
                 pmml.scorecard.modelName.value = scorecardName.text
             }
         }

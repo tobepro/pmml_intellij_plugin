@@ -20,7 +20,7 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
 
     init {
         // 表格设置
-        autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
+        autoResizeMode = JTable.AUTO_RESIZE_ALL_COLUMNS
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
 
         // 设置render
@@ -56,15 +56,17 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
     }
 
     companion object {
-        const val OPERATOR_COLUMN = 0
-        const val OPERATOR_VALUE_COLUMN = 1
-        const val SCORE_COLUMN = 2
+        const val ROW_NUM = 0
+        const val OPERATOR_COLUMN = 1
+        const val OPERATOR_VALUE_COLUMN = 2
+        const val SCORE_COLUMN = 3
 
         class ModelAdapter(private var prop: Characteristic?, private val writeAction: WriteCommandAction.Builder) : AbstractTableModel(), EditableModel {
             private var attrs = prop?.attributes
 
             override fun getColumnName(column: Int): String {
                 return when (column) {
+                    ROW_NUM -> "No."
                     OPERATOR_COLUMN -> "操作符"
                     OPERATOR_VALUE_COLUMN -> "值"
                     SCORE_COLUMN -> "得分"
@@ -74,6 +76,7 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
 
             override fun getColumnClass(columnIndex: Int): Class<*> {
                 return when (columnIndex) {
+                    ROW_NUM -> Int::class.java
                     OPERATOR_COLUMN -> OperatorEnum::class.java
                     OPERATOR_VALUE_COLUMN -> String::class.java
                     SCORE_COLUMN -> String::class.java
@@ -86,13 +89,14 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
             }
 
             override fun getColumnCount(): Int {
-                return 3
+                return 4
             }
 
             override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
                 return if (attrs != null && 0 <= rowIndex && rowIndex < attrs!!.size) {
                     val attr = attrs!![rowIndex]
                     when (columnIndex) {
+                        ROW_NUM -> rowIndex + 1
                         OPERATOR_COLUMN -> when {
                             attr.simpleSetPredicate.exists() ->
                                 OperatorEnum.valueOf(attr.simpleSetPredicate.booleanOperator.value.toString())
@@ -220,7 +224,7 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-                return true
+                return columnIndex != ROW_NUM
             }
 
             override fun addRow() {
