@@ -44,6 +44,7 @@ patchPluginXml {
       <li>5.字段可重命名</li>
       <li>6.FinalScore字段不可编辑</li>
       <li>7.编辑模式分数自动全选</li>
+      <li>8.字段名增加类名前缀</li>
       """
     version("1.0.1")
 }

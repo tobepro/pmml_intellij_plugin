@@ -4,6 +4,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.ui.ComboBoxTableRenderer
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.EditableModel
+import common.Constants
 import model.dom.DataDictionary
 import model.dom.PMML
 import model.dom.enums.DataType
@@ -17,7 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer
 
 class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builder) : JBTable(ModelAdapter(dic, writeAction)) {
     init {
-        autoResizeMode = JTable.AUTO_RESIZE_ALL_COLUMNS
+        autoResizeMode = JTable.AUTO_RESIZE_NEXT_COLUMN
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         emptyText.text = "暂无数据"
 
@@ -35,6 +36,7 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
                 return value.value
             }
         }
+        
     }
 
     override fun getModel(): ModelAdapter {
@@ -42,14 +44,19 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
     }
 
     companion object {
-        const val NAME_COLUMN = 0
-        const val DATA_TYPE_COLUMN = 1
+        const val NAME_PRE_COLUMN = 0
+        const val NAME_COLUMN = 1
+        const val DATA_TYPE_COLUMN = 2
 
         class ModelAdapter(private val dic: DataDictionary, private val writeAction: WriteCommandAction.Builder) : AbstractTableModel(), EditableModel {
             private var dataFieldList = dic.dataFields
 
             override fun getColumnName(column: Int): String {
-                return if (column == NAME_COLUMN) "字段名" else "数据类型"
+                return when(column) {
+                    NAME_PRE_COLUMN -> "类"
+                    NAME_COLUMN -> "字段名"
+                    else -> "类型"
+                }
             }
 
             override fun getRowCount(): Int {
@@ -57,15 +64,15 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
             }
 
             override fun getColumnCount(): Int {
-                return 2
+                return 3
             }
 
             override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
                 return if (0 <= rowIndex && rowIndex < dataFieldList.size) {
-                    if (columnIndex == NAME_COLUMN) {
-                        dataFieldList[rowIndex].name.value!!
-                    } else {
-                        dataFieldList[rowIndex].dataType.value!!
+                    when (columnIndex) {
+                        NAME_PRE_COLUMN -> dataFieldList[rowIndex].name.value!!.split(".")[0]
+                        NAME_COLUMN -> dataFieldList[rowIndex].name.value!!.run { if (contains(".")) split(".")[1] else "" }
+                        else -> dataFieldList[rowIndex].dataType.value!!
                     }
                 } else {
                     "should not be happened"
@@ -75,9 +82,9 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
             override fun setValueAt(aValue: Any?, rowIndex: Int, columnIndex: Int) {
                 writeAction.run<Exception> {
                     when (columnIndex) {
-                        NAME_COLUMN -> {
-                            val name = aValue as String
-                            val oldName = getValueAt(rowIndex, columnIndex) as String
+                        NAME_PRE_COLUMN, NAME_COLUMN -> {
+                            val name = "${getValueAt(rowIndex, NAME_PRE_COLUMN)}.${aValue as String}"
+                            val oldName = "${getValueAt(rowIndex, NAME_PRE_COLUMN)}.${getValueAt(rowIndex, NAME_COLUMN)}"
                             dataFieldList[rowIndex].name.value = name
                             val pmml = dic.parent as PMML
                             pmml.scorecard.miningSchema.miningFields.firstOrNull { it.name.value == oldName }?.name?.value = name
@@ -134,7 +141,10 @@ class DataFieldTable(dic: DataDictionary, writeAction: WriteCommandAction.Builde
             }
 
             override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
-                return NAME_COLUMN == columnIndex
+                return DATA_TYPE_COLUMN != columnIndex
+                        && NAME_PRE_COLUMN != columnIndex
+                        && getValueAt(rowIndex, NAME_PRE_COLUMN) != Constants.FINAL_SCORE_FIELD
+                        && getValueAt(rowIndex, NAME_COLUMN) != Constants.FINAL_SCORE_FIELD
             }
 
             override fun addRow() {

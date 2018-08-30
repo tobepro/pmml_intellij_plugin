@@ -14,7 +14,8 @@ import javax.swing.event.DocumentListener
 
 class FieldCreateDialog : DialogWrapper(true) {
     private var myFieldData = FieldDialog("", DataType.DOUBLE)
-    private val myNameText = JBTextField(2)
+    private val myPreNameText = JBTextField(1)
+    private val myNameText = JBTextField(1)
     private val myComboBox = ComboBox(DataType.values().map { it.value }.toTypedArray())
 
     init {
@@ -40,6 +41,22 @@ class FieldCreateDialog : DialogWrapper(true) {
             }
         })
 
+        myPreNameText.document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+
+            override fun insertUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+
+            override fun removeUpdate(e: DocumentEvent?) {
+                updateOKButton()
+            }
+        })
+
+        val preNameLabel = JLabel("字段类")
+        preNameLabel.labelFor = myPreNameText
         val nameLabel = JLabel("字段名")
         nameLabel.labelFor = myNameText
         val typeLabel = JLabel("类型")
@@ -47,9 +64,15 @@ class FieldCreateDialog : DialogWrapper(true) {
 
         return panel {
             row {
-                cell {
-                    nameLabel(grow, push)
-                    myNameText(grow, push)
+                cell(true) {
+                    preNameLabel(grow, push)
+                    myPreNameText(grow, push)
+                }
+                right { 
+                    cell {
+                        nameLabel(grow, push)
+                        myNameText(grow, push)
+                    }
                 }
             }
             row {
@@ -64,7 +87,7 @@ class FieldCreateDialog : DialogWrapper(true) {
     override fun doOKAction() {
         close(OK_EXIT_CODE)
         myFieldData.apply { 
-            name = myNameText.text
+            name = "${myPreNameText.name}.${myNameText.text}"
             dataType = DataType.values().first{ it.value == myComboBox.selectedItem.toString() }
         }
     }
@@ -78,6 +101,6 @@ class FieldCreateDialog : DialogWrapper(true) {
     }
 
     private fun updateOKButton() {
-        okAction.isEnabled = !myNameText.text.isEmpty()
+        okAction.isEnabled = !myNameText.text.isEmpty() && !myPreNameText.text.isEmpty()
     }
 }
