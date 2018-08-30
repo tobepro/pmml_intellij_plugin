@@ -10,8 +10,9 @@ import model.dom.enums.*
 import org.fest.util.Collections
 import util.TypeUtil
 import java.awt.Component
-import javax.swing.JTable
-import javax.swing.ListSelectionModel
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
+import javax.swing.*
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 
@@ -39,6 +40,19 @@ class FieldDetailTable(private var fieldType: DataType, prop: Characteristic?, w
         operatorValueModel.cellRenderer = SimpleRenderer()
         val scoreModel = columnModel.getColumn(SCORE_COLUMN)
         scoreModel.cellRenderer = SimpleRenderer()
+        
+        // 点击评分后全选内容
+        val scoreTextField = JTextField()
+        scoreModel.cellEditor = object : DefaultCellEditor(scoreTextField) {
+            init {
+                scoreTextField.addFocusListener(object : FocusAdapter() {
+                    override fun focusGained(e: FocusEvent?) {
+                        scoreTextField.selectAll()
+                    }
+                })
+            }
+        }
+        
         // 空数据展示
         emptyText.text = "暂无数据"
     }
